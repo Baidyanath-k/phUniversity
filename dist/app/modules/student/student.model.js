@@ -118,9 +118,9 @@ const StudentSchema = new mongoose_1.Schema({
     },
     admissionSemester: {
         type: mongoose_1.Schema.Types.ObjectId,
-        required: [true, "Academic Semester MongoDB ID must be required"],
+        required: [true, 'Academic Semester MongoDB ID must be required'],
         unique: true,
-        ref: 'AcademicModel'
+        ref: 'AcademicModel',
     },
     guardian: {
         type: studentGuardianSchema,

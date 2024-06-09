@@ -31,5 +31,5 @@ exports.academicDepartmentService = {
     createAcademicDepartmentInDB,
     getAllAcademicDepartmentInDB,
     getSingleAcademicDepartmentByIdInDB,
-    updateAcademicDepartmentByIdInDB
+    updateAcademicDepartmentByIdInDB,
 };

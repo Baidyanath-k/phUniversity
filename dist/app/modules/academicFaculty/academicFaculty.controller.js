@@ -53,5 +53,5 @@ exports.academicFacultyController = {
     createAcademicFacultyCont,
     getAllAcademicFacultiesCont,
     getSingleAcademicFacultyCont,
-    updateAcademicFacultyCont
+    updateAcademicFacultyCont,
 };

@@ -24,12 +24,14 @@ const getSingleAcademicFacultyByID = (id) => __awaiter(void 0, void 0, void 0, f
     return result;
 });
 const updateAcademicFacultyInDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield academicFaculty_model_1.AcademicFaculty.findOneAndUpdate({ _id: id }, payload, { new: true });
+    const result = yield academicFaculty_model_1.AcademicFaculty.findOneAndUpdate({ _id: id }, payload, {
+        new: true,
+    });
     return result;
 });
 exports.academicFacultyService = {
     createAcademicFacultyInDB,
     getAllAcademicFacultiesInDB,
     getSingleAcademicFacultyByID,
-    updateAcademicFacultyInDB
+    updateAcademicFacultyInDB,
 };

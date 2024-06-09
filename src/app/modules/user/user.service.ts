@@ -22,11 +22,10 @@ const createStudentIntoDB = async (
   // set role = student
   userData.role = 'student';
 
-
-
-
   // find ID by academic semester
-  const admissionSemester = await AcademicModel.findById(userStudentData.admissionSemester);
+  const admissionSemester = await AcademicModel.findById(
+    userStudentData.admissionSemester,
+  );
 
   // set student ID
   userData.id = await generateStudentId(admissionSemester as any);

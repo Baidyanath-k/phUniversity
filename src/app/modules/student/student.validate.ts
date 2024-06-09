@@ -90,7 +90,9 @@ const createStudentValidation = z.object({
         .string()
         .min(1, { message: 'Present address is required' }),
       permanentAddress: z.string(),
-      admissionSemester: z.string().refine(objectIdValidation, { message: 'Invalid ObjectId' }),
+      admissionSemester: z
+        .string()
+        .refine(objectIdValidation, { message: 'Invalid ObjectId' }),
       guardian: studentGuardianSchema,
       profileImg: z.string().optional(),
       localGuardian: studentLocalGuardianSchema.optional(),

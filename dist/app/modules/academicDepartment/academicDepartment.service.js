@@ -16,11 +16,11 @@ const createAcademicDepartmentInDB = (payload) => __awaiter(void 0, void 0, void
     return result;
 });
 const getAllAcademicDepartmentInDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield academicDepartment_model_1.AcademicDepartment.find();
+    const result = yield academicDepartment_model_1.AcademicDepartment.find().populate('refAcademicFaculty');
     return result;
 });
 const getSingleAcademicDepartmentByIdInDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield academicDepartment_model_1.AcademicDepartment.findById(id);
+    const result = yield academicDepartment_model_1.AcademicDepartment.findById(id).populate('refAcademicFaculty');
     return result;
 });
 const updateAcademicDepartmentByIdInDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {

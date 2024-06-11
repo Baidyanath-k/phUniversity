@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+import AppError from '../../appError/appError';
 import config from '../../config';
 import { AcademicModel } from '../academicSemester/academicSemester.model';
 import { Student } from '../student/student.interface';
@@ -12,6 +14,8 @@ const createStudentIntoDB = async (
 ) => {
   // create user->student
   const userData: Partial<TUser> = {};
+
+
   // If password not given then set default password
   if (!password) {
     password = config.default_pass as string;
@@ -27,18 +31,41 @@ const createStudentIntoDB = async (
     userStudentData.admissionSemester,
   );
 
-  // set student ID
-  userData.id = await generateStudentId(admissionSemester as any);
+  // transaction rollback start
 
-  const newUser = await User.create(userData);
+  const session = await mongoose.startSession(); // create a session
 
-  if (Object.keys(newUser).length) {
-    userStudentData.id = newUser.id;
-    userStudentData.user = newUser._id;
+  try {
+    session.startTransaction(); // start session
 
-    const newStudent = await StudentModel.create(userStudentData);
+    // set student ID
+    userData.id = await generateStudentId(admissionSemester as any);
+
+    // create a user(transaction-1)
+    const newUser = await User.create([userData], { session }); // session e data array hisebe dite hobe
+
+    if (!newUser.length) {
+      throw new AppError(400, "Failed to create user")
+    }
+    userStudentData.id = newUser[0].id;
+    userStudentData.user = newUser[0]._id;
+
+    // create a student(transaction-2)
+    const newStudent = await StudentModel.create({ userStudentData }, { session });
+    if (!newStudent) {
+      throw new AppError(400, "Failed to create student")
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
     return newStudent;
+
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
   }
+
+
 };
 
 export const userService = {

@@ -127,6 +127,10 @@ const StudentSchema = new mongoose_1.Schema({
         required: [true, 'Guardian information is required'],
     },
     profileImg: { type: String },
+    isDeleted: {
+        type: Boolean,
+        default: false,
+    },
     localGuardian: {
         type: studentLocalGuardianSchema,
     },

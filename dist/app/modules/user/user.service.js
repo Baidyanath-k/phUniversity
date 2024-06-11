@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
+const mongoose_1 = __importDefault(require("mongoose"));
+const appError_1 = __importDefault(require("../../appError/appError"));
 const config_1 = __importDefault(require("../../config"));
 const academicSemester_model_1 = require("../academicSemester/academicSemester.model");
 const student_model_1 = require("../student/student.model");
@@ -32,14 +34,31 @@ const createStudentIntoDB = (password, userStudentData) => __awaiter(void 0, voi
     userData.role = 'student';
     // find ID by academic semester
     const admissionSemester = yield academicSemester_model_1.AcademicModel.findById(userStudentData.admissionSemester);
-    // set student ID
-    userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
-    const newUser = yield user_model_1.User.create(userData);
-    if (Object.keys(newUser).length) {
-        userStudentData.id = newUser.id;
-        userStudentData.user = newUser._id;
-        const newStudent = yield student_model_1.StudentModel.create(userStudentData);
+    // transaction rollback start
+    const session = yield mongoose_1.default.startSession(); // create a session
+    try {
+        session.startTransaction(); // start session
+        // set student ID
+        userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
+        // create a user(transaction-1)
+        const newUser = yield user_model_1.User.create([userData], { session }); // session e data array hisebe dite hobe
+        if (!newUser.length) {
+            throw new appError_1.default(400, "Failed to create user");
+        }
+        userStudentData.id = newUser[0].id;
+        userStudentData.user = newUser[0]._id;
+        // create a student(transaction-2)
+        const newStudent = yield student_model_1.StudentModel.create({ userStudentData }, { session });
+        if (!newStudent) {
+            throw new appError_1.default(400, "Failed to create student");
+        }
+        yield session.commitTransaction();
+        yield session.endSession();
         return newStudent;
+    }
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
     }
 });
 exports.userService = {

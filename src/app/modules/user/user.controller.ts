@@ -12,6 +12,6 @@ const createStudent = catchAsync(async (req, res) => {
   });
 });
 
-export const studentControllers = {
+export const userControllers = {
   createStudent,
 };

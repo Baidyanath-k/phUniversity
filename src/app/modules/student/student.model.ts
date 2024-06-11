@@ -127,6 +127,10 @@ const StudentSchema = new Schema<Student>(
       required: [true, 'Guardian information is required'],
     },
     profileImg: { type: String },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
     localGuardian: {
       type: studentLocalGuardianSchema,
     },

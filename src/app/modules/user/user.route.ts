@@ -1,7 +1,7 @@
 import express from 'express';
 import requestValidate from '../../utils/validateRequest';
 import { stu_Zod_Valid_Schema } from '../student/student.validate';
-import { studentControllers } from './user.controller';
+import { userControllers } from './user.controller';
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const router = express.Router();
 router.post(
   '/create_student',
   requestValidate(stu_Zod_Valid_Schema.createStudentValidation),
-  studentControllers.createStudent,
+  userControllers.createStudent,
 );
 
 export const createUserRoutes = router;

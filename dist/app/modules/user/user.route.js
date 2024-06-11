@@ -10,5 +10,5 @@ const student_validate_1 = require("../student/student.validate");
 const user_controller_1 = require("./user.controller");
 const router = express_1.default.Router();
 // create student router
-router.post('/create_student', (0, validateRequest_1.default)(student_validate_1.stu_Zod_Valid_Schema.createStudentValidation), user_controller_1.studentControllers.createStudent);
+router.post('/create_student', (0, validateRequest_1.default)(student_validate_1.stu_Zod_Valid_Schema.createStudentValidation), user_controller_1.userControllers.createStudent);
 exports.createUserRoutes = router;

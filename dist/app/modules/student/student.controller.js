@@ -41,8 +41,20 @@ const deleteStudentCont = (0, catchAsync_1.default)((req, res) => __awaiter(void
         data: result,
     });
 }));
+// update student controller
+const updateStudentCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { studentId } = req.params;
+    const { student } = req.body;
+    const result = yield student_service_1.StudentServices.updateStudentInDB(studentId, student);
+    res.status(200).json({
+        success: true,
+        message: 'Student update successfully',
+        data: result,
+    });
+}));
 exports.StudentControllers = {
     getAllStudentsController,
     getSingleStudentByIdController,
-    deleteStudentCont
+    deleteStudentCont,
+    updateStudentCont
 };

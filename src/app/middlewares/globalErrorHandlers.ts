@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+import handleMongooseError from '../appError/handleMongooseError';
 import { handleZodError } from '../appError/handleZodError';
 import config from '../config';
 import { TErrorSources } from '../errorInterface/error';
@@ -20,6 +21,11 @@ export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next,) =>
 
   if (err instanceof ZodError) {
     const simplifiedError = handleZodError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  } else if (err?.name === 'ValidationError') {
+    const simplifiedError = handleMongooseError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;

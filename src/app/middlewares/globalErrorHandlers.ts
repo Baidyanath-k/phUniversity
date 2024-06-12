@@ -1,20 +1,47 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { NextFunction, Request, Response } from 'express';
+import { ErrorRequestHandler } from 'express';
+import { ZodError } from 'zod';
+import { handleZodError } from '../appError/handleZodError';
+import config from '../config';
+import { TErrorSources } from '../errorInterface/error';
 
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-explicit-any
-export const globalErrorHandler = (
-  err: any,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.message || 'Something went wrong!';
+export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next,) => {
+  let statusCode = err.statusCode || 500;
+  let message = err.message || 'Something went wrong!';
+
+  let errorSources: TErrorSources = [
+    {
+      path: '',
+      message: 'Something went wrong!'
+    }
+  ];
+
+  if (err instanceof ZodError) {
+    const simplifiedError = handleZodError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  }
+
   return res.status(statusCode).json({
     success: false,
     message,
-    error: err,
+    errorSources,
+    stack: config.NODE_ENV === "development" ? err?.stack : null
   });
 };
+
+/*
+Error Handler pattern
+
+success:"",
+message:"",
+errorSources:[
+  path:"",
+  message:""
+],
+stack:"",
+
+*/

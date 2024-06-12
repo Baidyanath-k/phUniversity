@@ -4,6 +4,7 @@
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
 import handleCastError from '../appError/handleCastError';
+import handleDuplicateError from '../appError/handleDuplicateError';
 import handleMongooseError from '../appError/handleMongooseError';
 import { handleZodError } from '../appError/handleZodError';
 import config from '../config';
@@ -32,6 +33,11 @@ export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
     errorSources = simplifiedError?.errorSources;
   } else if (err?.name === 'CastError') {
     const simplifiedError = handleCastError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  } else if (err?.code === 11000) {
+    const simplifiedError = handleDuplicateError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;

@@ -3,12 +3,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+import handleCastError from '../appError/handleCastError';
 import handleMongooseError from '../appError/handleMongooseError';
 import { handleZodError } from '../appError/handleZodError';
 import config from '../config';
 import { TErrorSources } from '../errorInterface/error';
 
-export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next,) => {
+export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Something went wrong!';
 
@@ -26,6 +27,11 @@ export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next,) =>
     errorSources = simplifiedError?.errorSources;
   } else if (err?.name === 'ValidationError') {
     const simplifiedError = handleMongooseError(err);
+    statusCode = simplifiedError?.statusCode;
+    message = simplifiedError?.message;
+    errorSources = simplifiedError?.errorSources;
+  } else if (err?.name === 'CastError') {
+    const simplifiedError = handleCastError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;

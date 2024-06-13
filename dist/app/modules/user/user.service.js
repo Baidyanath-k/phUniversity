@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userService = void 0;
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const mongoose_1 = __importDefault(require("mongoose"));
 const appError_1 = __importDefault(require("../../appError/appError"));
 const config_1 = __importDefault(require("../../config"));
@@ -20,7 +21,7 @@ const academicSemester_model_1 = require("../academicSemester/academicSemester.m
 const student_model_1 = require("../student/student.model");
 const user_model_1 = require("./user.model");
 const user_utils_1 = require("./user.utils");
-const createStudentIntoDB = (password, userStudentData) => __awaiter(void 0, void 0, void 0, function* () {
+const createStudentIntoDB = (password, payLoad) => __awaiter(void 0, void 0, void 0, function* () {
     // create user->student
     const userData = {};
     // If password not given then set default password
@@ -33,22 +34,27 @@ const createStudentIntoDB = (password, userStudentData) => __awaiter(void 0, voi
     // set role = student
     userData.role = 'student';
     // find ID by academic semester
-    const admissionSemester = yield academicSemester_model_1.AcademicModel.findById(userStudentData.admissionSemester);
+    const admissionSemester = yield academicSemester_model_1.AcademicSemester.findById(payLoad.admissionSemester);
     // transaction rollback start
     const session = yield mongoose_1.default.startSession(); // create a session
     try {
         session.startTransaction(); // start session
         // set student ID
-        userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
+        if (!admissionSemester) {
+            throw new appError_1.default(400, "Not found admissionSemester!");
+        }
+        else {
+            userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
+        }
         // create a user(transaction-1)
         const newUser = yield user_model_1.User.create([userData], { session }); // session e data array hisebe dite hobe
         if (!newUser.length) {
             throw new appError_1.default(400, "Failed to create user");
         }
-        userStudentData.id = newUser[0].id;
-        userStudentData.user = newUser[0]._id;
+        payLoad.id = newUser[0].id;
+        payLoad.user = newUser[0]._id;
         // create a student(transaction-2)
-        const newStudent = yield student_model_1.StudentModel.create({ userStudentData }, { session });
+        const newStudent = yield student_model_1.StudentModel.create([payLoad], { session });
         if (!newStudent) {
             throw new appError_1.default(400, "Failed to create student");
         }
@@ -59,6 +65,7 @@ const createStudentIntoDB = (password, userStudentData) => __awaiter(void 0, voi
     catch (error) {
         yield session.abortTransaction();
         yield session.endSession();
+        throw new Error(error);
     }
 });
 exports.userService = {

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AcademicModel = void 0;
+exports.AcademicSemester = void 0;
 const mongoose_1 = require("mongoose");
 const academicSemester_const_1 = require("./academicSemester.const");
 const AcademicSemesterSchema = new mongoose_1.Schema({
@@ -40,7 +40,7 @@ const AcademicSemesterSchema = new mongoose_1.Schema({
 }, { timestamps: true });
 AcademicSemesterSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const isSemesterExistsInYear = yield exports.AcademicModel.findOne({
+        const isSemesterExistsInYear = yield exports.AcademicSemester.findOne({
             name: this.name,
             year: this.year,
         });
@@ -50,4 +50,4 @@ AcademicSemesterSchema.pre('save', function (next) {
         next();
     });
 });
-exports.AcademicModel = (0, mongoose_1.model)('AcademicSemester', AcademicSemesterSchema);
+exports.AcademicSemester = (0, mongoose_1.model)('AcademicSemester', AcademicSemesterSchema);

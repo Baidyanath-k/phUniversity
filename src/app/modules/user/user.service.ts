@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose';
 import AppError from '../../appError/appError';
 import config from '../../config';
-import { AcademicModel } from '../academicSemester/academicSemester.model';
+import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { Student } from '../student/student.interface';
 import { StudentModel } from '../student/student.model';
 import { TUser } from './user.interface';
@@ -10,7 +11,7 @@ import { generateStudentId } from './user.utils';
 
 const createStudentIntoDB = async (
   password: string,
-  userStudentData: Student,
+  payLoad: Student,
 ) => {
   // create user->student
   const userData: Partial<TUser> = {};
@@ -27,9 +28,8 @@ const createStudentIntoDB = async (
   userData.role = 'student';
 
   // find ID by academic semester
-  const admissionSemester = await AcademicModel.findById(
-    userStudentData.admissionSemester,
-  );
+  const admissionSemester = await AcademicSemester.findById(payLoad.admissionSemester);
+
 
   // transaction rollback start
 
@@ -39,7 +39,12 @@ const createStudentIntoDB = async (
     session.startTransaction(); // start session
 
     // set student ID
-    userData.id = await generateStudentId(admissionSemester as any);
+    if (!admissionSemester) {
+      throw new AppError(400, "Not found admissionSemester!")
+    } else {
+      userData.id = await generateStudentId(admissionSemester);
+    }
+
 
     // create a user(transaction-1)
     const newUser = await User.create([userData], { session }); // session e data array hisebe dite hobe
@@ -47,11 +52,11 @@ const createStudentIntoDB = async (
     if (!newUser.length) {
       throw new AppError(400, "Failed to create user")
     }
-    userStudentData.id = newUser[0].id;
-    userStudentData.user = newUser[0]._id;
+    payLoad.id = newUser[0].id;
+    payLoad.user = newUser[0]._id;
 
     // create a student(transaction-2)
-    const newStudent = await StudentModel.create({ userStudentData }, { session });
+    const newStudent = await StudentModel.create([payLoad], { session });
     if (!newStudent) {
       throw new AppError(400, "Failed to create student")
     }
@@ -60,9 +65,10 @@ const createStudentIntoDB = async (
     await session.endSession();
     return newStudent;
 
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
+    throw new Error(error);
   }
 
 

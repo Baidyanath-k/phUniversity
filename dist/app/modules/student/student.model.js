@@ -120,7 +120,7 @@ const StudentSchema = new mongoose_1.Schema({
         type: mongoose_1.Schema.Types.ObjectId,
         required: [true, 'Academic Semester MongoDB ID must be required'],
         unique: true,
-        ref: 'AcademicModel',
+        ref: 'AcademicSemester',
     },
     guardian: {
         type: studentGuardianSchema,

@@ -120,7 +120,7 @@ const StudentSchema = new Schema<Student>(
       type: Schema.Types.ObjectId,
       required: [true, 'Academic Semester MongoDB ID must be required'],
       unique: true,
-      ref: 'AcademicModel',
+      ref: 'AcademicSemester',
     },
     guardian: {
       type: studentGuardianSchema,

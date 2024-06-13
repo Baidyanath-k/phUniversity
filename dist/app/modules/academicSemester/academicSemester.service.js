@@ -16,7 +16,7 @@ const createAcademicSemesterInDB = (payload) => __awaiter(void 0, void 0, void 0
     if (academicSemester_const_1.academicSemesterCodeAndNameValidate[payload.name] !== payload.code) {
         throw new Error('Semester name and code is invalid');
     }
-    const result = yield academicSemester_model_1.AcademicModel.create(payload);
+    const result = yield academicSemester_model_1.AcademicSemester.create(payload);
     return result;
 });
 exports.academicSemesterService = {

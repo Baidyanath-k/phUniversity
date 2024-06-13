@@ -78,7 +78,7 @@ const createStudentValidation = zod_1.z.object({
             emergencyContactNo: zod_1.z
                 .string()
                 .min(1, { message: 'Emergency contact number is required' }),
-            dateOfBirth: zod_1.z.date().optional(),
+            dateOfBirth: zod_1.z.string().optional(),
             bloodGroup: zod_1.z
                 .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
                 .optional(),
@@ -162,7 +162,7 @@ const updateStudentValidation = zod_1.z.object({
             emergencyContactNo: zod_1.z
                 .string()
                 .min(1, { message: 'Emergency contact number is required' }).optional(),
-            dateOfBirth: zod_1.z.date().optional(),
+            dateOfBirth: zod_1.z.string().optional(),
             bloodGroup: zod_1.z
                 .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
                 .optional(),

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.globalErrorHandler = void 0;
 const zod_1 = require("zod");
+const appError_1 = __importDefault(require("../appError/appError"));
 const handleCastError_1 = __importDefault(require("../appError/handleCastError"));
 const handleDuplicateError_1 = __importDefault(require("../appError/handleDuplicateError"));
 const handleMongooseError_1 = __importDefault(require("../appError/handleMongooseError"));
@@ -42,6 +43,25 @@ const globalErrorHandler = (err, req, res, next) => {
         statusCode = simplifiedError === null || simplifiedError === void 0 ? void 0 : simplifiedError.statusCode;
         message = simplifiedError === null || simplifiedError === void 0 ? void 0 : simplifiedError.message;
         errorSources = simplifiedError === null || simplifiedError === void 0 ? void 0 : simplifiedError.errorSources;
+    }
+    else if (err instanceof appError_1.default) {
+        statusCode = err === null || err === void 0 ? void 0 : err.statusCode;
+        message = err === null || err === void 0 ? void 0 : err.message;
+        errorSources = [
+            {
+                path: "",
+                message: err.message
+            }
+        ];
+    }
+    else if (err instanceof Error) {
+        message = err === null || err === void 0 ? void 0 : err.message;
+        errorSources = [
+            {
+                path: "",
+                message: err === null || err === void 0 ? void 0 : err.message
+            }
+        ];
     }
     return res.status(statusCode).json({
         success: false,

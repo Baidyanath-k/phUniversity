@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
+import AppError from '../appError/appError';
 import handleCastError from '../appError/handleCastError';
 import handleDuplicateError from '../appError/handleDuplicateError';
 import handleMongooseError from '../appError/handleMongooseError';
@@ -41,6 +42,23 @@ export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
+  } else if (err instanceof AppError) {
+    statusCode = err?.statusCode;
+    message = err?.message;
+    errorSources = [
+      {
+        path: "",
+        message: err.message
+      }
+    ];
+  } else if (err instanceof Error) {
+    message = err?.message;
+    errorSources = [
+      {
+        path: "",
+        message: err?.message
+      }
+    ];
   }
 
   return res.status(statusCode).json({

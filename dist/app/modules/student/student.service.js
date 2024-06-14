@@ -42,17 +42,35 @@ const getAllStudentDB = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 // search student form MongoDB
 const searchStudentDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const queryObj = Object.assign({}, query);
     // {email: {$regex: query.searchTerm, $option:i}}
+    // HOW OUR FORMAT SHOULD BE FOR PARTIAL MATCH  :
     let searchTerm = '';
     if (query === null || query === void 0 ? void 0 : query.searchTerm) {
         searchTerm = query === null || query === void 0 ? void 0 : query.searchTerm;
     }
-    const result = yield student_model_1.StudentModel.find({
+    const searchQuery = student_model_1.StudentModel.find({
         $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
             [field]: { $regex: searchTerm, $options: 'i' }
         }))
     });
-    return result;
+    // FILTERING fUNCTIONALITY:
+    const excludesFields = ['searchTerm', 'sort', 'limit'];
+    excludesFields.forEach((el) => delete queryObj[el]);
+    const filterQuery = searchQuery.find(queryObj);
+    // SORTING FUNCTIONALITY:
+    let sort = '-createdAt';
+    if (query.sort) {
+        sort = query.sort;
+    }
+    const sortQuery = filterQuery.sort(sort);
+    // LIMIT FUNCTIONALITY:
+    let limit = 1;
+    if (query.limit) {
+        limit = query.limit;
+    }
+    const limitQuery = yield sortQuery.limit(limit);
+    return limitQuery;
 });
 // Find One Student By (custom made ID) ID form MongoDB
 const getSingleStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {

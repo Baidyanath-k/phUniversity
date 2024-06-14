@@ -20,19 +20,44 @@ const getAllStudentDB = async () => {
 // search student form MongoDB
 const searchStudentDB = async (query: Record<string, unknown>) => {
 
-  // {email: {$regex: query.searchTerm, $option:i}}
+  const queryObj = { ...query };
 
+
+  // {email: {$regex: query.searchTerm, $option:i}}
+  // HOW OUR FORMAT SHOULD BE FOR PARTIAL MATCH  :
   let searchTerm = '';
   if (query?.searchTerm) {
     searchTerm = query?.searchTerm as string
   }
 
-  const result = await StudentModel.find({
+  const searchQuery = StudentModel.find({
     $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
       [field]: { $regex: searchTerm, $options: 'i' }
     }))
   })
-  return result;
+
+  // FILTERING fUNCTIONALITY:
+  const excludesFields = ['searchTerm', 'sort', 'limit'];
+  excludesFields.forEach((el) => delete queryObj[el])
+  const filterQuery = searchQuery.find(queryObj)
+
+  // SORTING FUNCTIONALITY:
+  let sort = '-createdAt';
+  if (query.sort) {
+    sort = query.sort as string
+  }
+  const sortQuery = filterQuery.sort(sort);
+
+
+  // LIMIT FUNCTIONALITY:
+  let limit = 1;
+
+  if (query.limit) {
+    limit = query.limit as number;
+  }
+  const limitQuery = await sortQuery.limit(limit)
+
+  return limitQuery;
 };
 
 

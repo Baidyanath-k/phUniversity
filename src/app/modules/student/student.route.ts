@@ -7,6 +7,7 @@ import { stu_Zod_Valid_Schema } from './student.validate';
 const router = express.Router();
 
 router.get('/get_all_students', StudentControllers.getAllStudentsController);
+router.get('/search_students', StudentControllers.searchStudentsController);
 router.get(
   '/find_student/:studentId',
   StudentControllers.getSingleStudentByIdController,

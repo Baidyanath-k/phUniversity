@@ -5,7 +5,17 @@ const getAllStudentsController = catchAsync(async (req, res) => {
   const result = await StudentServices.getAllStudentDB();
   res.status(200).json({
     success: true,
-    message: 'Student is get successfully',
+    message: 'All students is get successfully',
+    data: result,
+  });
+});
+
+// search student controller
+const searchStudentsController = catchAsync(async (req, res) => {
+  const result = await StudentServices.searchStudentDB(req.query);
+  res.status(200).json({
+    success: true,
+    message: 'search students is successfully',
     data: result,
   });
 });
@@ -46,5 +56,6 @@ export const StudentControllers = {
   getAllStudentsController,
   getSingleStudentByIdController,
   deleteStudentCont,
-  updateStudentCont
+  updateStudentCont,
+  searchStudentsController
 };

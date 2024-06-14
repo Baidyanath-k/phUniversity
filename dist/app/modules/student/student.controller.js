@@ -19,7 +19,16 @@ const getAllStudentsController = (0, catchAsync_1.default)((req, res) => __await
     const result = yield student_service_1.StudentServices.getAllStudentDB();
     res.status(200).json({
         success: true,
-        message: 'Student is get successfully',
+        message: 'All students is get successfully',
+        data: result,
+    });
+}));
+// search student controller
+const searchStudentsController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield student_service_1.StudentServices.searchStudentDB(req.query);
+    res.status(200).json({
+        success: true,
+        message: 'search students is successfully',
         data: result,
     });
 }));
@@ -56,5 +65,6 @@ exports.StudentControllers = {
     getAllStudentsController,
     getSingleStudentByIdController,
     deleteStudentCont,
-    updateStudentCont
+    updateStudentCont,
+    searchStudentsController
 };

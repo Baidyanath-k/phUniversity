@@ -40,6 +40,20 @@ const getAllStudentDB = () => __awaiter(void 0, void 0, void 0, function* () {
     ;
     return result;
 });
+// search student form MongoDB
+const searchStudentDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    // {email: {$regex: query.searchTerm, $option:i}}
+    let searchTerm = '';
+    if (query === null || query === void 0 ? void 0 : query.searchTerm) {
+        searchTerm = query === null || query === void 0 ? void 0 : query.searchTerm;
+    }
+    const result = yield student_model_1.StudentModel.find({
+        $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
+            [field]: { $regex: searchTerm, $options: 'i' }
+        }))
+    });
+    return result;
+});
 // Find One Student By (custom made ID) ID form MongoDB
 const getSingleStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield student_model_1.StudentModel.findOne({ id: id });
@@ -104,5 +118,6 @@ exports.StudentServices = {
     getAllStudentDB,
     getSingleStudentFromDB,
     deleteStudentFromDB,
-    updateStudentInDB
+    updateStudentInDB,
+    searchStudentDB
 };

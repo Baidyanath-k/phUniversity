@@ -17,6 +17,24 @@ const getAllStudentDB = async () => {
   return result;
 };
 
+// search student form MongoDB
+const searchStudentDB = async (query: Record<string, unknown>) => {
+
+  // {email: {$regex: query.searchTerm, $option:i}}
+
+  let searchTerm = '';
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string
+  }
+
+  const result = await StudentModel.find({
+    $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
+      [field]: { $regex: searchTerm, $options: 'i' }
+    }))
+  })
+  return result;
+};
+
 
 // Find One Student By (custom made ID) ID form MongoDB
 const getSingleStudentFromDB = async (id: string) => {
@@ -105,5 +123,6 @@ export const StudentServices = {
   getAllStudentDB,
   getSingleStudentFromDB,
   deleteStudentFromDB,
-  updateStudentInDB
+  updateStudentInDB,
+  searchStudentDB
 };

@@ -72,6 +72,11 @@ const studentLocalGuardianSchema = new Schema<LocalGuardian>({
 
 const StudentSchema = new Schema<Student>(
   {
+    id: {
+      type: String,
+      required: [true, 'ID is required'],
+      unique: true,
+    },
     user: {
       type: Schema.Types.ObjectId,
       required: [true, 'User MongDB ID must be required'],
@@ -130,6 +135,10 @@ const StudentSchema = new Schema<Student>(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
     },
     localGuardian: {
       type: studentLocalGuardianSchema,

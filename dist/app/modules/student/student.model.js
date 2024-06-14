@@ -72,6 +72,11 @@ const studentLocalGuardianSchema = new mongoose_1.Schema({
     },
 });
 const StudentSchema = new mongoose_1.Schema({
+    id: {
+        type: String,
+        required: [true, 'ID is required'],
+        unique: true,
+    },
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: [true, 'User MongDB ID must be required'],
@@ -130,6 +135,10 @@ const StudentSchema = new mongoose_1.Schema({
     isDeleted: {
         type: Boolean,
         default: false,
+    },
+    academicDepartment: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'AcademicDepartment',
     },
     localGuardian: {
         type: studentLocalGuardianSchema,

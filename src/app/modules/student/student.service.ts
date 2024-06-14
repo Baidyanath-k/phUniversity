@@ -7,7 +7,13 @@ import { StudentModel } from './student.model';
 
 // Find ALL Students form MongoDB
 const getAllStudentDB = async () => {
-  const result = await StudentModel.find();
+  const result = await StudentModel.find().populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'refAcademicFaculty',
+      },
+    });;
   return result;
 };
 

@@ -91,6 +91,7 @@ const createStudentValidation = zod_1.z.object({
                 .refine(objectIdValidation, { message: 'Invalid ObjectId' }),
             guardian: studentGuardianSchema,
             profileImg: zod_1.z.string().optional(),
+            academicDepartment: zod_1.z.string(),
             localGuardian: studentLocalGuardianSchema.optional(),
         }),
     }),

@@ -30,7 +30,14 @@ const user_model_1 = require("../user/user.model");
 const student_model_1 = require("./student.model");
 // Find ALL Students form MongoDB
 const getAllStudentDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield student_model_1.StudentModel.find();
+    const result = yield student_model_1.StudentModel.find().populate('admissionSemester')
+        .populate({
+        path: 'academicDepartment',
+        populate: {
+            path: 'refAcademicFaculty',
+        },
+    });
+    ;
     return result;
 });
 // Find One Student By (custom made ID) ID form MongoDB

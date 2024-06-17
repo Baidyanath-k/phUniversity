@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import AppError from '../../appError/appError';
+import QueryBuilder from '../../builder/QueryBuilder';
 import { User } from '../user/user.model';
 import { Student } from './student.interface';
 import { StudentModel } from './student.model';
@@ -13,51 +14,79 @@ const getAllStudentDB = async () => {
       populate: {
         path: 'refAcademicFaculty',
       },
-    });;
+    });
   return result;
 };
 
 // search student form MongoDB
 const searchStudentDB = async (query: Record<string, unknown>) => {
 
-  const queryObj = { ...query };
+  // const queryObj = { ...query };
 
 
   // {email: {$regex: query.searchTerm, $option:i}}
   // HOW OUR FORMAT SHOULD BE FOR PARTIAL MATCH  :
-  let searchTerm = '';
-  if (query?.searchTerm) {
-    searchTerm = query?.searchTerm as string
-  }
+  // let searchTerm = '';
+  // if (query?.searchTerm) {
+  //   searchTerm = query?.searchTerm as string
+  // }
 
-  const searchQuery = StudentModel.find({
-    $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
-      [field]: { $regex: searchTerm, $options: 'i' }
-    }))
-  })
+  // const searchTerm = ['email', 'name.firstName', 'presentAddress']
+  // const searchQuery = StudentModel.find({
+  //   $or: searchTerm.map((field) => ({
+  //     [field]: { $regex: searchTerm, $options: 'i' }
+  //   }))
+  // })
 
   // FILTERING fUNCTIONALITY:
-  const excludesFields = ['searchTerm', 'sort', 'limit'];
-  excludesFields.forEach((el) => delete queryObj[el])
-  const filterQuery = searchQuery.find(queryObj)
+  // const excludesFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+  // excludesFields.forEach((el) => delete queryObj[el]);
+  // const filterQuery = searchQuery.find(queryObj)
 
   // SORTING FUNCTIONALITY:
-  let sort = '-createdAt';
-  if (query.sort) {
-    sort = query.sort as string
-  }
-  const sortQuery = filterQuery.sort(sort);
+  // let sort = '-createdAt';
+  // if (query.sort) {
+  //   sort = query.sort as string
+  // }
+  // const sortQuery = filterQuery.sort(sort);
 
 
   // LIMIT FUNCTIONALITY:
-  let limit = 1;
+  // let limit = 1;
+  // let page = 1;
+  // let skip = 0;
 
-  if (query.limit) {
-    limit = query.limit as number;
-  }
-  const limitQuery = await sortQuery.limit(limit)
+  // if (query.limit) {
+  //   limit = Number(query.limit);
+  // }
 
-  return limitQuery;
+  // if (query.page) {
+  //   page = Number(query.page);
+  //   skip = (page - 1) * limit;
+  // }
+
+  // const paginateQuery = sortQuery.skip(skip);
+  // const limitQuery = paginateQuery.limit(limit);
+
+  // FIELDS FUNCTIONALITY:
+  // fields = 'name,email' --> 'name email'
+
+  // let fields = '-__v';
+
+  // if (query.fields) {
+  //   fields = (query.fields as string).split(',').join(' ');
+  // }
+
+  // const fieldsQuery = await limitQuery.select(fields);
+
+  // return fieldsQuery;
+
+  const searchTerm = ['email', 'name.firstName', 'presentAddress']
+  const studentQuery = new QueryBuilder(StudentModel.find(), query).search(searchTerm).filter().sort().paginate().fields();
+
+  const result = await studentQuery.modelQuery;
+
+  return result;
 };
 
 
@@ -112,6 +141,8 @@ const updateStudentInDB = async (id: string, payload: Partial<Student>) => {
     guarding:{
       fatherOccupation:"teacher"
     }
+  
+    **convert to
 
     guarding.fatherOccupation = teacher
   */

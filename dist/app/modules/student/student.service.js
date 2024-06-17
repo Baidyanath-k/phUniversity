@@ -26,6 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentServices = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const appError_1 = __importDefault(require("../../appError/appError"));
+const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const user_model_1 = require("../user/user.model");
 const student_model_1 = require("./student.model");
 // Find ALL Students form MongoDB
@@ -37,40 +38,58 @@ const getAllStudentDB = () => __awaiter(void 0, void 0, void 0, function* () {
             path: 'refAcademicFaculty',
         },
     });
-    ;
     return result;
 });
 // search student form MongoDB
 const searchStudentDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const queryObj = Object.assign({}, query);
+    // const queryObj = { ...query };
     // {email: {$regex: query.searchTerm, $option:i}}
     // HOW OUR FORMAT SHOULD BE FOR PARTIAL MATCH  :
-    let searchTerm = '';
-    if (query === null || query === void 0 ? void 0 : query.searchTerm) {
-        searchTerm = query === null || query === void 0 ? void 0 : query.searchTerm;
-    }
-    const searchQuery = student_model_1.StudentModel.find({
-        $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
-            [field]: { $regex: searchTerm, $options: 'i' }
-        }))
-    });
+    // let searchTerm = '';
+    // if (query?.searchTerm) {
+    //   searchTerm = query?.searchTerm as string
+    // }
+    // const searchTerm = ['email', 'name.firstName', 'presentAddress']
+    // const searchQuery = StudentModel.find({
+    //   $or: searchTerm.map((field) => ({
+    //     [field]: { $regex: searchTerm, $options: 'i' }
+    //   }))
+    // })
     // FILTERING fUNCTIONALITY:
-    const excludesFields = ['searchTerm', 'sort', 'limit'];
-    excludesFields.forEach((el) => delete queryObj[el]);
-    const filterQuery = searchQuery.find(queryObj);
+    // const excludesFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+    // excludesFields.forEach((el) => delete queryObj[el]);
+    // const filterQuery = searchQuery.find(queryObj)
     // SORTING FUNCTIONALITY:
-    let sort = '-createdAt';
-    if (query.sort) {
-        sort = query.sort;
-    }
-    const sortQuery = filterQuery.sort(sort);
+    // let sort = '-createdAt';
+    // if (query.sort) {
+    //   sort = query.sort as string
+    // }
+    // const sortQuery = filterQuery.sort(sort);
     // LIMIT FUNCTIONALITY:
-    let limit = 1;
-    if (query.limit) {
-        limit = query.limit;
-    }
-    const limitQuery = yield sortQuery.limit(limit);
-    return limitQuery;
+    // let limit = 1;
+    // let page = 1;
+    // let skip = 0;
+    // if (query.limit) {
+    //   limit = Number(query.limit);
+    // }
+    // if (query.page) {
+    //   page = Number(query.page);
+    //   skip = (page - 1) * limit;
+    // }
+    // const paginateQuery = sortQuery.skip(skip);
+    // const limitQuery = paginateQuery.limit(limit);
+    // FIELDS FUNCTIONALITY:
+    // fields = 'name,email' --> 'name email'
+    // let fields = '-__v';
+    // if (query.fields) {
+    //   fields = (query.fields as string).split(',').join(' ');
+    // }
+    // const fieldsQuery = await limitQuery.select(fields);
+    // return fieldsQuery;
+    const searchTerm = ['email', 'name.firstName', 'presentAddress'];
+    const studentQuery = new QueryBuilder_1.default(student_model_1.StudentModel.find(), query).search(searchTerm).filter().sort().paginate().fields();
+    const result = yield studentQuery.modelQuery;
+    return result;
 });
 // Find One Student By (custom made ID) ID form MongoDB
 const getSingleStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -107,6 +126,8 @@ const updateStudentInDB = (id, payload) => __awaiter(void 0, void 0, void 0, fun
       guarding:{
         fatherOccupation:"teacher"
       }
+    
+      **convert to
   
       guarding.fatherOccupation = teacher
     */

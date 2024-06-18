@@ -9,4 +9,5 @@ const faculty_controller_1 = require("./faculty.controller");
 const router = express_1.default.Router();
 router.get('/get-all-faculty', faculty_controller_1.facultiesController.getAllFacultiesCont);
 router.get('/get-single-faculty/:id', faculty_controller_1.facultiesController.singleFacultyCont);
+router.get('/faculty-search', faculty_controller_1.facultiesController.searchFacultyCont);
 exports.facultyRoutes = router;

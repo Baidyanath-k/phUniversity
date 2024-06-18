@@ -75,6 +75,8 @@ const createStudentIntoDB = async (
   }
 };
 
+// create faculty
+
 const createFacultyInDB = async (password: string, payLoad: TFaculty) => {
 
   const userData: Partial<TUser> = {};
@@ -83,14 +85,14 @@ const createFacultyInDB = async (password: string, payLoad: TFaculty) => {
 
   userData.role = 'faculty';
 
-  
+
   const academicDepartment = await AcademicDepartment.findById(payLoad.academicDepartment);
- 
+
 
   const session = await mongoose.startSession();
   try {
     session.startTransaction(); // start session
-    
+
     // set student ID
     if (!academicDepartment) {
       throw new AppError(400, "Not found academic department!")
@@ -101,12 +103,12 @@ const createFacultyInDB = async (password: string, payLoad: TFaculty) => {
     }
     userData.id = userDataId;
 
-  
+
 
     // create a user(transaction-1)
-    
+
     const newUser = await User.create([userData], { session });
-    
+
 
     if (!newUser.length) {
       throw new AppError(400, "Failed to create user")

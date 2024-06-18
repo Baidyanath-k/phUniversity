@@ -70,6 +70,7 @@ const createStudentIntoDB = (password, payLoad) => __awaiter(void 0, void 0, voi
         throw new Error(error);
     }
 });
+// create faculty
 const createFacultyInDB = (password, payLoad) => __awaiter(void 0, void 0, void 0, function* () {
     const userData = {};
     userData.password = password || config_1.default.default_pass;

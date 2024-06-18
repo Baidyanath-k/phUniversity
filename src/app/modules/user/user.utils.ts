@@ -30,3 +30,30 @@ export const generateStudentId = async (payload: TAcademicSemester) => {
   incrementID = `${payload.year}${payload.code}${incrementID}`;
   return incrementID;
 };
+
+const findLastFacultyId = async () => {
+  const lastFacultyID = await User.findOne({ role: "faculty" }, { id: 1, _id: 0 }).sort({ createdAt: -1 }).lean();
+
+  if (lastFacultyID?.id) {
+    return lastFacultyID.id.substring(2);
+  } else {
+    return undefined;
+  }
+};
+
+
+export const generatedFacultyId = async () => {
+  let currentID = (0).toString();
+
+  const lastFacultyID = await findLastFacultyId();
+
+  if (lastFacultyID) {
+    currentID = lastFacultyID.substring(2);
+  }
+
+  let incrementId = (Number(currentID) + 1).toString().padStart(4, '0');
+  incrementId = `F-${incrementId}`;
+
+  return incrementId;
+
+}

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateStudentId = void 0;
+exports.generatedFacultyId = exports.generateStudentId = void 0;
 const user_model_1 = require("./user.model");
 // Find Last Student ID
 const lastStudentId = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -37,3 +37,23 @@ const generateStudentId = (payload) => __awaiter(void 0, void 0, void 0, functio
     return incrementID;
 });
 exports.generateStudentId = generateStudentId;
+const findLastFacultyId = () => __awaiter(void 0, void 0, void 0, function* () {
+    const lastFacultyID = yield user_model_1.User.findOne({ role: "faculty" }, { id: 1, _id: 0 }).sort({ createdAt: -1 }).lean();
+    if (lastFacultyID === null || lastFacultyID === void 0 ? void 0 : lastFacultyID.id) {
+        return lastFacultyID.id.substring(2);
+    }
+    else {
+        return undefined;
+    }
+});
+const generatedFacultyId = () => __awaiter(void 0, void 0, void 0, function* () {
+    let currentID = (0).toString();
+    const lastFacultyID = yield findLastFacultyId();
+    if (lastFacultyID) {
+        currentID = lastFacultyID.substring(2);
+    }
+    let incrementId = (Number(currentID) + 1).toString().padStart(4, '0');
+    incrementId = `F-${incrementId}`;
+    return incrementId;
+});
+exports.generatedFacultyId = generatedFacultyId;

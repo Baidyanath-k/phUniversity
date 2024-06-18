@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import validator from "validator";
+import { BloodGroup, Gender } from "./faculty.const";
 import { TFaculty, TUserName } from "./faculty.interface";
 
 
@@ -23,7 +24,7 @@ const userNameSchema = new Schema<TUserName>({
     }
 });
 
-const facultyModel = new Schema<TFaculty>({
+const facultySchema = new Schema<TFaculty>({
     id: {
         type: String,
         required: [true, "Faculty ID must be required!"],
@@ -31,9 +32,9 @@ const facultyModel = new Schema<TFaculty>({
     },
     user: {
         type: Schema.Types.ObjectId,
-        ref: "User",
         unique: true,
-        required: [true, "User must be required!!"]
+        required: [true, "User must be required!!"],
+        ref: "User",
     },
     designation: {
         type: String,
@@ -46,7 +47,7 @@ const facultyModel = new Schema<TFaculty>({
     gender: {
         type: String,
         enum: {
-            values: ['male', 'female', 'others'],
+            values: Gender,
             message: `{VALUE} is not valid Gender`
         },
         required: [true, "Gender is required!!"]
@@ -54,7 +55,7 @@ const facultyModel = new Schema<TFaculty>({
     bloodGroup: {
         type: String,
         enum: {
-            values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+            values: BloodGroup,
             message: `{VALUE} is not valid blood group`
         },
     },
@@ -97,17 +98,48 @@ const facultyModel = new Schema<TFaculty>({
     },
     academicDepartment: {
         type: Schema.Types.ObjectId,
+        required: [true, "Academic Department ID is required"],
         ref: 'AcademicDepartment',
-        required: [true, "Academic Department ID is required"]
     }
 },
     {
         toJSON: {
             virtuals: true,
         },
-        timestamps: true
     }
 );
 
+facultySchema.virtual('fullName').get(function () {
+    return (
+        this?.name?.firstName +
+        '' +
+        this?.name?.middleName +
+        '' +
+        this?.name?.lastName
+    );
+});
 
-export const Faculty = model<TFaculty>('Faculty', facultyModel);
+// filter out deleted documents
+facultySchema.pre('find', function (next) {
+    this.find({ isDeleted: { $ne: true } });
+    next();
+});
+
+facultySchema.pre('findOne', function (next) {
+    this.find({ isDeleted: { $ne: true } });
+    next();
+});
+
+facultySchema.pre('aggregate', function (next) {
+    this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
+    next();
+});
+
+//checking if user is already exist!
+facultySchema.statics.isUserExists = async function (id: string) {
+    const existingUser = await Faculty.findOne({ id });
+    return existingUser;
+};
+
+
+export const Faculty = model<TFaculty>('Faculty', facultySchema);

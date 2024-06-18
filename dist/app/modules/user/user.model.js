@@ -13,9 +13,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const mongoose_1 = require("mongoose");
-const config_1 = __importDefault(require("../../config"));
 const UserSchema = new mongoose_1.Schema({
     id: {
         type: String,
@@ -44,12 +44,27 @@ const UserSchema = new mongoose_1.Schema({
 });
 UserSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        this.password = yield bcrypt_1.default.hash(this.password, Number(config_1.default.bcrypt_salt));
-        next();
+        try {
+            const salt = yield bcrypt_1.default.genSalt(10);
+            const hashedPassword = yield bcrypt_1.default.hash(this.password, salt);
+            this.password = hashedPassword;
+            next();
+        }
+        catch (error) {
+            next(error);
+        }
     });
 });
 UserSchema.post('save', function (doc, next) {
-    doc.password = '';
-    next();
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // console.log(doc.password);
+            doc.password = ' ';
+            next();
+        }
+        catch (error) {
+            next(error);
+        }
+    });
 });
 exports.User = (0, mongoose_1.model)('User', UserSchema);

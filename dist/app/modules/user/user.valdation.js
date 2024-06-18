@@ -4,6 +4,7 @@ const zod_1 = require("zod");
 const UserZodSchema = zod_1.z.object({
     password: zod_1.z
         .string({ invalid_type_error: 'Password must be string' })
-        .max(20, { message: 'Password can not be more than 20 characters' }),
+        .max(20, { message: 'Password can not be more than 20 characters' })
+        .optional(),
 });
 exports.default = UserZodSchema;

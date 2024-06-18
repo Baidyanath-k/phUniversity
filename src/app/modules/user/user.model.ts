@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
-import config from '../../config';
 import { TUser } from './user.interface';
 
 const UserSchema = new Schema<TUser>(
@@ -34,13 +34,27 @@ const UserSchema = new Schema<TUser>(
 );
 
 UserSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, Number(config.bcrypt_salt));
-  next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(this.password, salt);
+    this.password = hashedPassword;
+
+    next();
+  } catch (error: any) {
+    next(error)
+  }
+
 });
 
-UserSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
+UserSchema.post('save', async function (doc, next) {
+  try {
+    // console.log(doc.password);
+    doc.password = ' ';
+    next();
+  } catch (error: any) {
+    next(error)
+  }
 });
 
 export const User = model<TUser>('User', UserSchema);

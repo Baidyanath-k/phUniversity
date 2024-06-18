@@ -25,6 +25,16 @@ const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
+const createFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { password, faculty: facultyData } = req.body;
+    const result = yield user_service_1.userService.createFacultyInDB(password, facultyData);
+    res.status(200).json({
+        success: true,
+        message: 'Student create successfully',
+        data: result,
+    });
+}));
 exports.userControllers = {
     createStudent,
+    createFaculty
 };

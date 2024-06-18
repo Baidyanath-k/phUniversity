@@ -17,7 +17,9 @@ exports.userService = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const appError_1 = __importDefault(require("../../appError/appError"));
 const config_1 = __importDefault(require("../../config"));
+const academicDepartment_model_1 = require("../academicDepartment/academicDepartment.model");
 const academicSemester_model_1 = require("../academicSemester/academicSemester.model");
+const faculty_model_1 = require("../faculty/faculty.model");
 const student_model_1 = require("../student/student.model");
 const user_model_1 = require("./user.model");
 const user_utils_1 = require("./user.utils");
@@ -68,6 +70,46 @@ const createStudentIntoDB = (password, payLoad) => __awaiter(void 0, void 0, voi
         throw new Error(error);
     }
 });
+const createFacultyInDB = (password, payLoad) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = {};
+    userData.password = password || config_1.default.default_pass;
+    userData.role = 'faculty';
+    const academicDepartment = yield academicDepartment_model_1.AcademicDepartment.findById(payLoad.academicDepartment);
+    const session = yield mongoose_1.default.startSession();
+    try {
+        session.startTransaction(); // start session
+        // set student ID
+        if (!academicDepartment) {
+            throw new appError_1.default(400, "Not found academic department!");
+        }
+        const userDataId = yield (0, user_utils_1.generatedFacultyId)();
+        if (!userDataId) {
+            throw new appError_1.default(400, "Not found userData Id!");
+        }
+        userData.id = userDataId;
+        // create a user(transaction-1)
+        const newUser = yield user_model_1.User.create([userData], { session });
+        if (!newUser.length) {
+            throw new appError_1.default(400, "Failed to create user");
+        }
+        payLoad.id = newUser[0].id;
+        payLoad.user = newUser[0]._id;
+        // create a student(transaction-2)
+        const newFaculty = yield faculty_model_1.Faculty.create([payLoad], { session });
+        if (!newFaculty) {
+            throw new appError_1.default(400, "Failed to create student");
+        }
+        yield session.commitTransaction();
+        yield session.endSession();
+        return newFaculty;
+    }
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw new Error(error);
+    }
+});
 exports.userService = {
     createStudentIntoDB,
+    createFacultyInDB
 };

@@ -4,13 +4,15 @@ import AppError from '../../appError/appError';
 import config from '../../config';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
+import { TAdmin } from '../admin/admin.interface';
+import { Admin } from '../admin/admin.model';
 import { TFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
 import { Student } from '../student/student.interface';
 import { StudentModel } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-import { generateStudentId, generatedFacultyId } from './user.utils';
+import { generateStudentId, generatedAdminId, generatedFacultyId } from './user.utils';
 
 const createStudentIntoDB = async (
   password: string,
@@ -119,7 +121,7 @@ const createFacultyInDB = async (password: string, payLoad: TFaculty) => {
     // create a student(transaction-2)
     const newFaculty = await Faculty.create([payLoad], { session });
     if (!newFaculty) {
-      throw new AppError(400, "Failed to create student")
+      throw new AppError(400, "Failed to create faculty")
     }
 
     await session.commitTransaction();
@@ -131,9 +133,58 @@ const createFacultyInDB = async (password: string, payLoad: TFaculty) => {
     await session.endSession();
     throw new Error(error);
   }
+};
+
+const createAdminIntoDB = async (password: string, payLoad: TAdmin) => {
+  const userData: Partial<TUser> = {};
+
+  if (!password) {
+    password = config.default_pass as string;
+  } else {
+    userData.password = password
+  };
+
+  userData.role = 'admin';
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const userDataId = await generatedAdminId();
+    if (!userDataId) {
+      throw new AppError(400, "Not found userData Id!");
+    }
+    userData.id = userDataId;
+
+
+    const createUser = await User.create([userData], { session });
+    if (!createUser.length) {
+      throw new AppError(400, "Admin 'User' not created!!");
+    }
+
+    payLoad.id = createUser[0].id;
+    payLoad.user = createUser[0]._id;
+
+    const createAdmin = await Admin.create([payLoad], { session });
+    if (!createAdmin.length) {
+      throw new AppError(400, "Admin not created!!");
+    }
+
+    session.commitTransaction();
+    session.endSession();
+
+    return createAdmin;
+
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(error);
+  }
 }
 
 export const userService = {
   createStudentIntoDB,
-  createFacultyInDB
+  createFacultyInDB,
+  createAdminIntoDB
 };

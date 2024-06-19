@@ -17,7 +17,6 @@ const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const user_service_1 = require("./user.service");
 const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { password, student: studentData } = req.body;
-    // console.log(password, studentData);
     const result = yield user_service_1.userService.createStudentIntoDB(password, studentData);
     res.status(200).json({
         success: true,
@@ -30,11 +29,21 @@ const createFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     const result = yield user_service_1.userService.createFacultyInDB(password, facultyData);
     res.status(200).json({
         success: true,
-        message: 'Student create successfully',
+        message: 'Faculty create successfully',
+        data: result,
+    });
+}));
+const createAdminCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { password, admin: adminData } = req.body;
+    const result = yield user_service_1.userService.createAdminIntoDB(password, adminData);
+    res.status(200).json({
+        success: true,
+        message: 'Admin create successfully',
         data: result,
     });
 }));
 exports.userControllers = {
     createStudent,
-    createFaculty
+    createFaculty,
+    createAdminCont
 };

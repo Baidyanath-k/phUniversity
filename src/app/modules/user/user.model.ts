@@ -34,27 +34,15 @@ const UserSchema = new Schema<TUser>(
 );
 
 UserSchema.pre('save', async function (next) {
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(this.password, salt);
-    this.password = hashedPassword;
-
-    next();
-  } catch (error: any) {
-    next(error)
-  }
-
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(this.password, salt);
+  this.password = hashedPassword;
+  next();
 });
 
 UserSchema.post('save', async function (doc, next) {
-  try {
-    // console.log(doc.password);
-    doc.password = ' ';
-    next();
-  } catch (error: any) {
-    next(error)
-  }
+  doc.password = ' ';
+  next();
 });
 
 export const User = model<TUser>('User', UserSchema);

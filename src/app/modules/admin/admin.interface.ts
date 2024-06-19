@@ -15,13 +15,13 @@ export type TAdmin = {
     designation: string;
     name: TAdminName;
     gender: TAdminGender;
-    bloodGroup: TAdminBloodGroup;
-    dateOfBirth: string;
+    bloodGroup?: TAdminBloodGroup;
+    dateOfBirth?: string;
     email: string;
     contactNo: string;
     emergencyContactNo: string;
     presentAddress: string;
     permanentAddress: string;
-    profileImg: string;
+    profileImg?: string;
     isDeleted: boolean;
 }

@@ -19,6 +19,7 @@ const appError_1 = __importDefault(require("../../appError/appError"));
 const config_1 = __importDefault(require("../../config"));
 const academicDepartment_model_1 = require("../academicDepartment/academicDepartment.model");
 const academicSemester_model_1 = require("../academicSemester/academicSemester.model");
+const admin_model_1 = require("../admin/admin.model");
 const faculty_model_1 = require("../faculty/faculty.model");
 const student_model_1 = require("../student/student.model");
 const user_model_1 = require("./user.model");
@@ -98,7 +99,7 @@ const createFacultyInDB = (password, payLoad) => __awaiter(void 0, void 0, void 
         // create a student(transaction-2)
         const newFaculty = yield faculty_model_1.Faculty.create([payLoad], { session });
         if (!newFaculty) {
-            throw new appError_1.default(400, "Failed to create student");
+            throw new appError_1.default(400, "Failed to create faculty");
         }
         yield session.commitTransaction();
         yield session.endSession();
@@ -110,7 +111,46 @@ const createFacultyInDB = (password, payLoad) => __awaiter(void 0, void 0, void 
         throw new Error(error);
     }
 });
+const createAdminIntoDB = (password, payLoad) => __awaiter(void 0, void 0, void 0, function* () {
+    const userData = {};
+    if (!password) {
+        password = config_1.default.default_pass;
+    }
+    else {
+        userData.password = password;
+    }
+    ;
+    userData.role = 'admin';
+    const session = yield mongoose_1.default.startSession();
+    try {
+        session.startTransaction();
+        const userDataId = yield (0, user_utils_1.generatedAdminId)();
+        if (!userDataId) {
+            throw new appError_1.default(400, "Not found userData Id!");
+        }
+        userData.id = userDataId;
+        const createUser = yield user_model_1.User.create([userData], { session });
+        if (!createUser.length) {
+            throw new appError_1.default(400, "Admin 'User' not created!!");
+        }
+        payLoad.id = createUser[0].id;
+        payLoad.user = createUser[0]._id;
+        const createAdmin = yield admin_model_1.Admin.create([payLoad], { session });
+        if (!createAdmin.length) {
+            throw new appError_1.default(400, "Admin not created!!");
+        }
+        session.commitTransaction();
+        session.endSession();
+        return createAdmin;
+    }
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw new Error(error);
+    }
+});
 exports.userService = {
     createStudentIntoDB,
-    createFacultyInDB
+    createFacultyInDB,
+    createAdminIntoDB
 };

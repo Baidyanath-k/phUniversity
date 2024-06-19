@@ -1,3 +1,4 @@
+import AppError from '../../appError/appError';
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { User } from './user.model';
 
@@ -46,6 +47,9 @@ export const generatedFacultyId = async () => {
   let currentID = (0).toString();
 
   const lastFacultyID = await findLastFacultyId();
+  if (!lastFacultyID) {
+    throw new AppError(500, "Not found last faculty ID!")
+  }
 
   if (lastFacultyID) {
     currentID = lastFacultyID.substring(2);
@@ -56,4 +60,35 @@ export const generatedFacultyId = async () => {
 
   return incrementId;
 
+};
+
+const findLastAdminId = async () => {
+  const lastAdminId = await User.findOne({ role: 'admin' }, { id: 1, _id: 0 })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  if (lastAdminId?.id) {
+    return lastAdminId.id.substring(2);
+  } else {
+    return undefined;
+  }
+};
+
+export const generatedAdminId = async () => {
+  let currentID = (0).toString();
+
+  const lastAdminId = await findLastAdminId();
+  if (!lastAdminId) {
+    throw new AppError(500, "Not found last Admin ID!")
+  }
+
+  if (lastAdminId) {
+    currentID = lastAdminId.substring(2);
+  }
+
+  let incrementId = (Number(currentID) + 1).toString().padStart(4, '0');
+
+
+  incrementId = `A-${incrementId}`;
+  return incrementId;
 }

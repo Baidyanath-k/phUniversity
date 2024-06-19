@@ -44,27 +44,16 @@ const UserSchema = new mongoose_1.Schema({
 });
 UserSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const salt = yield bcrypt_1.default.genSalt(10);
-            const hashedPassword = yield bcrypt_1.default.hash(this.password, salt);
-            this.password = hashedPassword;
-            next();
-        }
-        catch (error) {
-            next(error);
-        }
+        const salt = yield bcrypt_1.default.genSalt(10);
+        const hashedPassword = yield bcrypt_1.default.hash(this.password, salt);
+        this.password = hashedPassword;
+        next();
     });
 });
 UserSchema.post('save', function (doc, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        try {
-            // console.log(doc.password);
-            doc.password = ' ';
-            next();
-        }
-        catch (error) {
-            next(error);
-        }
+        doc.password = ' ';
+        next();
     });
 });
 exports.User = (0, mongoose_1.model)('User', UserSchema);

@@ -3,7 +3,6 @@ import { userService } from './user.service';
 
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body;
-  // console.log(password, studentData);
 
   const result = await userService.createStudentIntoDB(password, studentData);
 
@@ -21,12 +20,23 @@ const createFaculty = catchAsync(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: 'Student create successfully',
+    message: 'Faculty create successfully',
+    data: result,
+  });
+});
+
+const createAdminCont = catchAsync(async (req, res) => {
+  const { password, admin: adminData } = req.body;
+  const result = await userService.createAdminIntoDB(password, adminData);
+  res.status(200).json({
+    success: true,
+    message: 'Admin create successfully',
     data: result,
   });
 });
 
 export const userControllers = {
   createStudent,
-  createFaculty
+  createFaculty,
+  createAdminCont
 };

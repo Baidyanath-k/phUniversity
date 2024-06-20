@@ -12,10 +12,10 @@ const createCourseValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
         title: zod_1.z.string(),
         prefix: zod_1.z.string(),
-        code: zod_1.z.number(),
+        code: zod_1.z.string(),
         credits: zod_1.z.number(),
         isDeleted: zod_1.z.boolean().optional(),
-        preRequisiteCourses: zod_1.z.array(createPreRequisiteCourseValidationSchema),
+        preRequisiteCourses: zod_1.z.array(createPreRequisiteCourseValidationSchema).optional(),
     })
 });
 const updatePreRequisiteCourseValidationSchema = zod_1.z.object({

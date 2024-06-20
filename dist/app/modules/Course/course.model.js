@@ -27,7 +27,7 @@ const courseSchema = new mongoose_1.Schema({
         trim: true,
     },
     code: {
-        type: Number,
+        type: String,
         trim: true,
         required: [true, "Code is required!!"],
     },

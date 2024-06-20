@@ -31,7 +31,7 @@ const courseSchema = new Schema<TCourse>(
             trim: true,
         },
         code: {
-            type: Number,
+            type: String,
             trim: true,
             required: [true, "Code is required!!"],
         },

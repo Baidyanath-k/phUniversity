@@ -24,7 +24,7 @@ const createCourseCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     });
 }));
 const findAllCoursesCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield course_service_1.courseServices.findAllCoursesFormDB();
+    const result = yield course_service_1.courseServices.findAllCoursesFormDB(req.query);
     res.status(200).json({
         success: true,
         message: 'All corses find successfully',

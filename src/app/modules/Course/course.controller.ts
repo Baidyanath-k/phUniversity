@@ -11,7 +11,7 @@ const createCourseCont = catchAsync(async (req, res) => {
 });
 
 const findAllCoursesCont = catchAsync(async (req, res) => {
-    const result = await courseServices.findAllCoursesFormDB();
+    const result = await courseServices.findAllCoursesFormDB(req.query);
     res.status(200).json({
         success: true,
         message: 'All corses find successfully',

@@ -22,7 +22,7 @@ process.on('unhandledRejection', () => {
   if (server) {
     server.close(() => {
       process.exit(1);
-    })
+    });
   }
   process.exit(1);
 });
@@ -30,4 +30,4 @@ process.on('unhandledRejection', () => {
 process.on('uncaughtException', () => {
   console.log(`uncaughtException is detected, shutting the server now`);
   process.exit(1);
-})
+});

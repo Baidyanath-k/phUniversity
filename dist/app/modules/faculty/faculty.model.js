@@ -19,63 +19,63 @@ const faculty_const_1 = require("./faculty.const");
 const userNameSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
-        required: [true, "User First Name must be required"],
+        required: [true, 'User First Name must be required'],
         trim: true,
-        maxlength: [20, "First name can not be more than 20 Characters"]
+        maxlength: [20, 'First name can not be more than 20 Characters'],
     },
     middleName: {
         type: String,
         trim: true,
-        maxlength: [20, 'Middle name can not be more than 20 characters']
+        maxlength: [20, 'Middle name can not be more than 20 characters'],
     },
     lastName: {
         type: String,
-        required: [true, "User First Name must be required"],
+        required: [true, 'User First Name must be required'],
         trim: true,
-        maxlength: [20, "Last name can not be more than 20 Characters"]
-    }
+        maxlength: [20, 'Last name can not be more than 20 Characters'],
+    },
 });
 const facultySchema = new mongoose_1.Schema({
     id: {
         type: String,
-        required: [true, "Faculty ID must be required!"],
+        required: [true, 'Faculty ID must be required!'],
         unique: true,
     },
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
         unique: true,
-        required: [true, "User must be required!!"],
-        ref: "User",
+        required: [true, 'User must be required!!'],
+        ref: 'User',
     },
     designation: {
         type: String,
-        required: [true, "Faculty Designation is required!!"],
+        required: [true, 'Faculty Designation is required!!'],
     },
     name: {
         type: userNameSchema,
-        required: [true, "User name (Faculty) is required!! "]
+        required: [true, 'User name (Faculty) is required!! '],
     },
     gender: {
         type: String,
         enum: {
             values: faculty_const_1.Gender,
-            message: `{VALUE} is not valid Gender`
+            message: `{VALUE} is not valid Gender`,
         },
-        required: [true, "Gender is required!!"]
+        required: [true, 'Gender is required!!'],
     },
     bloodGroup: {
         type: String,
         enum: {
             values: faculty_const_1.BloodGroup,
-            message: `{VALUE} is not valid blood group`
+            message: `{VALUE} is not valid blood group`,
         },
     },
     dateOfBirth: {
-        type: String
+        type: String,
     },
     email: {
         type: String,
-        required: [true, "Email must be required!!"],
+        required: [true, 'Email must be required!!'],
         unique: true,
         validate: {
             validator: (email) => validator_1.default.isEmail(email),
@@ -84,21 +84,21 @@ const facultySchema = new mongoose_1.Schema({
     },
     contactNo: {
         type: String,
-        required: [true, "Contact No. Must be required!!"],
+        required: [true, 'Contact No. Must be required!!'],
         unique: true,
     },
     emergencyContactNo: {
         type: String,
-        required: [true, "Emergency Contact No. Must be required!!"],
+        required: [true, 'Emergency Contact No. Must be required!!'],
         unique: true,
     },
     presentAddress: {
         type: String,
-        required: [true, "Present Address required!!"],
+        required: [true, 'Present Address required!!'],
     },
     permanentAddress: {
         type: String,
-        required: [true, "Permanent Address required!!"],
+        required: [true, 'Permanent Address required!!'],
     },
     profileImg: {
         type: String,
@@ -109,9 +109,9 @@ const facultySchema = new mongoose_1.Schema({
     },
     academicDepartment: {
         type: mongoose_1.Schema.Types.ObjectId,
-        required: [true, "Academic Department ID is required"],
+        required: [true, 'Academic Department ID is required'],
         ref: 'AcademicDepartment',
-    }
+    },
 }, {
     toJSON: {
         virtuals: true,

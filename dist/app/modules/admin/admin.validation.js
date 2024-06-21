@@ -15,7 +15,9 @@ const createAdminValidationSchema = zod_1.z.object({
             designation: zod_1.z.string(),
             name: createAdminNameValidateSchema,
             gender: zod_1.z.enum([...admin_const_1.AdminGender]),
-            bloodGroup: zod_1.z.enum([...admin_const_1.AdminBloodGroup]).optional(),
+            bloodGroup: zod_1.z
+                .enum([...admin_const_1.AdminBloodGroup])
+                .optional(),
             dateOfBirth: zod_1.z.string().optional(),
             email: zod_1.z.string().email(),
             contactNo: zod_1.z.string(),
@@ -23,8 +25,8 @@ const createAdminValidationSchema = zod_1.z.object({
             presentAddress: zod_1.z.string(),
             permanentAddress: zod_1.z.string(),
             profileImg: zod_1.z.string().optional(),
-        })
-    })
+        }),
+    }),
 });
 const updateAdminNameValidateSchema = zod_1.z.object({
     firstName: zod_1.z.string().min(1).max(20).optional(),
@@ -38,7 +40,9 @@ const updateAdminValidationSchema = zod_1.z.object({
             designation: zod_1.z.string().optional(),
             name: updateAdminNameValidateSchema.optional(),
             gender: zod_1.z.enum([...admin_const_1.AdminGender]).optional(),
-            bloodGroup: zod_1.z.enum([...admin_const_1.AdminBloodGroup]).optional(),
+            bloodGroup: zod_1.z
+                .enum([...admin_const_1.AdminBloodGroup])
+                .optional(),
             dateOfBirth: zod_1.z.string().optional(),
             email: zod_1.z.string().email().optional(),
             contactNo: zod_1.z.string().optional(),
@@ -46,10 +50,10 @@ const updateAdminValidationSchema = zod_1.z.object({
             presentAddress: zod_1.z.string().optional(),
             permanentAddress: zod_1.z.string().optional(),
             profileImg: zod_1.z.string().optional(),
-        })
-    })
+        }),
+    }),
 });
 exports.adminZodValidation = {
     createAdminValidationSchema,
-    updateAdminValidationSchema
+    updateAdminValidationSchema,
 };

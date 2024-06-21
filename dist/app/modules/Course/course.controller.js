@@ -27,7 +27,7 @@ const findAllCoursesCont = (0, catchAsync_1.default)((req, res) => __awaiter(voi
     const result = yield course_service_1.courseServices.findAllCoursesFormDB(req.query);
     res.status(200).json({
         success: true,
-        message: 'All corses find successfully',
+        message: 'All courses find successfully',
         data: result,
     });
 }));
@@ -49,9 +49,19 @@ const deleteCourseCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 
         data: result,
     });
 }));
+const updateCourseCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { courseId } = req.params;
+    const result = yield course_service_1.courseServices.updateCourseInDB(courseId, req.body);
+    res.status(200).json({
+        success: true,
+        message: 'Course delete successfully',
+        data: result,
+    });
+}));
 exports.courseControllers = {
     createCourseCont,
     findAllCoursesCont,
     findSingleCourseCont,
-    deleteCourseCont
+    deleteCourseCont,
+    updateCourseCont,
 };

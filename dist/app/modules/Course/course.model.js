@@ -5,7 +5,7 @@ const mongoose_1 = require("mongoose");
 const preRequisiteCoursesSchema = new mongoose_1.Schema({
     course: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Course'
+        ref: 'Course',
     },
     isDeleted: {
         type: Boolean,
@@ -17,31 +17,31 @@ const preRequisiteCoursesSchema = new mongoose_1.Schema({
 const courseSchema = new mongoose_1.Schema({
     title: {
         type: String,
-        required: [true, "Course title is required!!"],
+        required: [true, 'Course title is required!!'],
         trim: true,
         unique: true,
     },
     prefix: {
         type: String,
-        required: [true, "Prefix is required!!"],
+        required: [true, 'Prefix is required!!'],
         trim: true,
     },
     code: {
         type: String,
         trim: true,
-        required: [true, "Code is required!!"],
+        required: [true, 'Code is required!!'],
     },
     credits: {
         type: Number,
         trim: true,
-        required: [true, "Credits are required!!"],
+        required: [true, 'Credits are required!!'],
     },
     isDeleted: {
         type: Boolean,
         default: false,
     },
-    preRequisiteCourses: [preRequisiteCoursesSchema]
+    preRequisiteCourses: [preRequisiteCoursesSchema],
 }, {
-    timestamps: true
+    timestamps: true,
 });
 exports.Course = (0, mongoose_1.model)('Course', courseSchema);

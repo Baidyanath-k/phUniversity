@@ -43,5 +43,5 @@ const searchFacultyCont = (0, catchAsync_1.default)((req, res) => __awaiter(void
 exports.facultiesController = {
     getAllFacultiesCont,
     singleFacultyCont,
-    searchFacultyCont
+    searchFacultyCont,
 };

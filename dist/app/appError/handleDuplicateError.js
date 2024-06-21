@@ -5,15 +5,15 @@ const handleDuplicateError = (err) => {
     const extractedMessage = match && match[1];
     const errorSources = [
         {
-            path: "",
-            message: `${extractedMessage} is already exists!!`
-        }
+            path: '',
+            message: `${extractedMessage} is already exists!!`,
+        },
     ];
     const statusCode = 400;
     return {
         statusCode,
-        message: "Validation Error",
-        errorSources
+        message: 'Validation Error',
+        errorSources,
     };
 };
 exports.default = handleDuplicateError;

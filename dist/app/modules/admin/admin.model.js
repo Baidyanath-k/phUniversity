@@ -19,7 +19,7 @@ const admin_const_1 = require("./admin.const");
 const adminNameSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
-        required: [true, "First name must be required!"],
+        required: [true, 'First name must be required!'],
         trim: true,
         validate: {
             validator: function (value) {
@@ -31,12 +31,12 @@ const adminNameSchema = new mongoose_1.Schema({
     },
     middleName: {
         type: String,
-        required: [true, "Middle name must be required!"],
+        required: [true, 'Middle name must be required!'],
         trim: true,
     },
     lastName: {
         type: String,
-        required: [true, "Last name must be required!"],
+        required: [true, 'Last name must be required!'],
         trim: true,
     },
 });
@@ -44,21 +44,21 @@ const adminSchema = new mongoose_1.Schema({
     id: {
         type: String,
         unique: true,
-        required: [true, "Admin ID is required!"]
+        required: [true, 'Admin ID is required!'],
     },
     user: {
         type: mongoose_1.Schema.Types.ObjectId,
-        required: [true, "User is required!"],
+        required: [true, 'User is required!'],
         unique: true,
         ref: 'User',
     },
     designation: {
         type: String,
-        required: [true, "Designation is required!"],
+        required: [true, 'Designation is required!'],
     },
     name: {
         type: adminNameSchema,
-        required: [true, "Name is required"]
+        required: [true, 'Name is required'],
     },
     gender: {
         type: String,
@@ -66,7 +66,7 @@ const adminSchema = new mongoose_1.Schema({
             values: admin_const_1.AdminGender,
             message: `{VALUE} is not valid gender`,
         },
-        required: [true, "Admin Gender is required!!"]
+        required: [true, 'Admin Gender is required!!'],
     },
     bloodGroup: {
         type: String,
@@ -74,15 +74,15 @@ const adminSchema = new mongoose_1.Schema({
             values: admin_const_1.AdminBloodGroup,
             message: `{VALUE} is not valid blood group`,
         },
-        required: [true, "Blood group is required!!"]
+        required: [true, 'Blood group is required!!'],
     },
     dateOfBirth: {
         type: String,
-        required: [true, "Date of birth is required!"],
+        required: [true, 'Date of birth is required!'],
     },
     email: {
         type: String,
-        required: [true, "Email is required!"],
+        required: [true, 'Email is required!'],
         validate: {
             validator: (email) => validator_1.default.isEmail(email),
             message: '{VALUE} is not valid email',
@@ -90,39 +90,39 @@ const adminSchema = new mongoose_1.Schema({
     },
     contactNo: {
         type: String,
-        required: [true, "Contact no is required!"],
+        required: [true, 'Contact no is required!'],
     },
     emergencyContactNo: {
         type: String,
-        required: [true, "Emergency Contact no is required!"],
+        required: [true, 'Emergency Contact no is required!'],
     },
     presentAddress: {
         type: String,
-        required: [true, "Present address no is required!"],
+        required: [true, 'Present address no is required!'],
     },
     permanentAddress: {
         type: String,
-        required: [true, "Permanent address no is required!"],
+        required: [true, 'Permanent address no is required!'],
     },
     profileImg: {
         type: String,
     },
     isDeleted: {
         type: Boolean,
-        default: false
-    }
+        default: false,
+    },
 }, {
     timestamps: true,
     toJSON: {
         virtuals: true,
-    }
+    },
 });
 adminSchema.virtual('fullName').get(function () {
     var _a, _b, _c;
     return (((_a = this === null || this === void 0 ? void 0 : this.name) === null || _a === void 0 ? void 0 : _a.firstName) +
-        " " +
+        ' ' +
         ((_b = this === null || this === void 0 ? void 0 : this.name) === null || _b === void 0 ? void 0 : _b.middleName) +
-        " " +
+        ' ' +
         ((_c = this === null || this === void 0 ? void 0 : this.name) === null || _c === void 0 ? void 0 : _c.lastName));
 });
 adminSchema.pre('find', function (next) {

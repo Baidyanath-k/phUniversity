@@ -15,8 +15,10 @@ const createCourseValidationSchema = zod_1.z.object({
         code: zod_1.z.string(),
         credits: zod_1.z.number(),
         isDeleted: zod_1.z.boolean().optional(),
-        preRequisiteCourses: zod_1.z.array(createPreRequisiteCourseValidationSchema).optional(),
-    })
+        preRequisiteCourses: zod_1.z
+            .array(createPreRequisiteCourseValidationSchema)
+            .optional(),
+    }),
 });
 const updatePreRequisiteCourseValidationSchema = zod_1.z.object({
     course: zod_1.z.string(),
@@ -26,11 +28,13 @@ const updateCourseValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
         title: zod_1.z.string().optional(),
         prefix: zod_1.z.string().optional(),
-        code: zod_1.z.number().optional(),
+        code: zod_1.z.string().optional(),
         credits: zod_1.z.number().optional(),
         isDeleted: zod_1.z.boolean().optional(),
-        preRequisiteCourses: zod_1.z.array(updatePreRequisiteCourseValidationSchema).optional(),
-    })
+        preRequisiteCourses: zod_1.z
+            .array(updatePreRequisiteCourseValidationSchema)
+            .optional(),
+    }),
 });
 const facultiesWithCourseValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
@@ -40,5 +44,5 @@ const facultiesWithCourseValidationSchema = zod_1.z.object({
 exports.courseValidation = {
     createCourseValidationSchema,
     updateCourseValidationSchema,
-    facultiesWithCourseValidationSchema
+    facultiesWithCourseValidationSchema,
 };

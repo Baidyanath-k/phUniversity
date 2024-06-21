@@ -38,7 +38,7 @@ const deleteStudentCont = catchAsync(async (req, res) => {
     message: 'Student delete successfully',
     data: result,
   });
-})
+});
 
 // update student controller
 const updateStudentCont = catchAsync(async (req, res) => {
@@ -50,12 +50,12 @@ const updateStudentCont = catchAsync(async (req, res) => {
     message: 'Student update successfully',
     data: result,
   });
-})
+});
 
 export const StudentControllers = {
   getAllStudentsController,
   getSingleStudentByIdController,
   deleteStudentCont,
   updateStudentCont,
-  searchStudentsController
+  searchStudentsController,
 };

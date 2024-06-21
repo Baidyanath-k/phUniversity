@@ -39,5 +39,5 @@ const getSearchFacultyInDB = (query) => __awaiter(void 0, void 0, void 0, functi
 exports.facultyServices = {
     getAllFacultyIntoDB,
     getSingleFacultyInDB,
-    getSearchFacultyInDB
+    getSearchFacultyInDB,
 };

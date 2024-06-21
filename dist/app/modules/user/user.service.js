@@ -44,7 +44,7 @@ const createStudentIntoDB = (password, payLoad) => __awaiter(void 0, void 0, voi
         session.startTransaction(); // start session
         // set student ID
         if (!admissionSemester) {
-            throw new appError_1.default(400, "Not found admissionSemester!");
+            throw new appError_1.default(400, 'Not found admissionSemester!');
         }
         else {
             userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
@@ -52,14 +52,14 @@ const createStudentIntoDB = (password, payLoad) => __awaiter(void 0, void 0, voi
         // create a user(transaction-1)
         const newUser = yield user_model_1.User.create([userData], { session }); // session e data array hisebe dite hobe
         if (!newUser.length) {
-            throw new appError_1.default(400, "Failed to create user");
+            throw new appError_1.default(400, 'Failed to create user');
         }
         payLoad.id = newUser[0].id;
         payLoad.user = newUser[0]._id;
         // create a student(transaction-2)
         const newStudent = yield student_model_1.StudentModel.create([payLoad], { session });
         if (!newStudent) {
-            throw new appError_1.default(400, "Failed to create student");
+            throw new appError_1.default(400, 'Failed to create student');
         }
         yield session.commitTransaction();
         yield session.endSession();
@@ -82,24 +82,24 @@ const createFacultyInDB = (password, payLoad) => __awaiter(void 0, void 0, void 
         session.startTransaction(); // start session
         // set student ID
         if (!academicDepartment) {
-            throw new appError_1.default(400, "Not found academic department!");
+            throw new appError_1.default(400, 'Not found academic department!');
         }
         const userDataId = yield (0, user_utils_1.generatedFacultyId)();
         if (!userDataId) {
-            throw new appError_1.default(400, "Not found userData Id!");
+            throw new appError_1.default(400, 'Not found userData Id!');
         }
         userData.id = userDataId;
         // create a user(transaction-1)
         const newUser = yield user_model_1.User.create([userData], { session });
         if (!newUser.length) {
-            throw new appError_1.default(400, "Failed to create user");
+            throw new appError_1.default(400, 'Failed to create user');
         }
         payLoad.id = newUser[0].id;
         payLoad.user = newUser[0]._id;
         // create a student(transaction-2)
         const newFaculty = yield faculty_model_1.Faculty.create([payLoad], { session });
         if (!newFaculty) {
-            throw new appError_1.default(400, "Failed to create faculty");
+            throw new appError_1.default(400, 'Failed to create faculty');
         }
         yield session.commitTransaction();
         yield session.endSession();
@@ -119,14 +119,13 @@ const createAdminIntoDB = (password, payLoad) => __awaiter(void 0, void 0, void 
     else {
         userData.password = password;
     }
-    ;
     userData.role = 'admin';
     const session = yield mongoose_1.default.startSession();
     try {
         session.startTransaction();
         const userDataId = yield (0, user_utils_1.generatedAdminId)();
         if (!userDataId) {
-            throw new appError_1.default(400, "Not found userData Id!");
+            throw new appError_1.default(400, 'Not found userData Id!');
         }
         userData.id = userDataId;
         const createUser = yield user_model_1.User.create([userData], { session });
@@ -137,7 +136,7 @@ const createAdminIntoDB = (password, payLoad) => __awaiter(void 0, void 0, void 
         payLoad.user = createUser[0]._id;
         const createAdmin = yield admin_model_1.Admin.create([payLoad], { session });
         if (!createAdmin.length) {
-            throw new appError_1.default(400, "Admin not created!!");
+            throw new appError_1.default(400, 'Admin not created!!');
         }
         session.commitTransaction();
         session.endSession();
@@ -152,5 +151,5 @@ const createAdminIntoDB = (password, payLoad) => __awaiter(void 0, void 0, void 
 exports.userService = {
     createStudentIntoDB,
     createFacultyInDB,
-    createAdminIntoDB
+    createAdminIntoDB,
 };

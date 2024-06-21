@@ -31,7 +31,8 @@ const user_model_1 = require("../user/user.model");
 const student_model_1 = require("./student.model");
 // Find ALL Students form MongoDB
 const getAllStudentDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield student_model_1.StudentModel.find().populate('admissionSemester')
+    const result = yield student_model_1.StudentModel.find()
+        .populate('admissionSemester')
         .populate({
         path: 'academicDepartment',
         populate: {
@@ -87,7 +88,12 @@ const searchStudentDB = (query) => __awaiter(void 0, void 0, void 0, function* (
     // const fieldsQuery = await limitQuery.select(fields);
     // return fieldsQuery;
     const searchTerm = ['email', 'name.firstName', 'presentAddress'];
-    const studentQuery = new QueryBuilder_1.default(student_model_1.StudentModel.find(), query).search(searchTerm).filter().sort().paginate().fields();
+    const studentQuery = new QueryBuilder_1.default(student_model_1.StudentModel.find(), query)
+        .search(searchTerm)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
     const result = yield studentQuery.modelQuery;
     return result;
 });
@@ -103,11 +109,11 @@ const deleteStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
         session.startTransaction();
         const deletedStudent = yield student_model_1.StudentModel.findOneAndUpdate({ id }, { isDeleted: true }, { new: true, session });
         if (!deletedStudent) {
-            throw new appError_1.default(400, "Failed to deleted student");
+            throw new appError_1.default(400, 'Failed to deleted student');
         }
         const deletedUser = yield user_model_1.User.findOneAndUpdate({ id }, { isDeleted: true }, { new: true, session });
         if (!deletedUser) {
-            throw new appError_1.default(400, "Failed to deleted student");
+            throw new appError_1.default(400, 'Failed to deleted student');
         }
         yield session.commitTransaction();
         yield session.endSession();
@@ -116,7 +122,7 @@ const deleteStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* 
     catch (error) {
         yield session.abortTransaction();
         yield session.endSession();
-        throw new appError_1.default(400, "Failed to deleted student and error");
+        throw new appError_1.default(400, 'Failed to deleted student and error');
     }
 });
 // Update Student By (custom made ID) ID form MongoDB
@@ -137,19 +143,16 @@ const updateStudentInDB = (id, payload) => __awaiter(void 0, void 0, void 0, fun
             modifyStudentData[`name.${key}`] = value;
         }
     }
-    ;
     if (guardian && Object.keys(guardian).length) {
         for (const [key, value] of Object.entries(guardian)) {
             modifyStudentData[`guardian.${key}`] = value;
         }
     }
-    ;
     if (localGuardian && Object.keys(localGuardian).length) {
         for (const [key, value] of Object.entries(localGuardian)) {
             modifyStudentData[`localGuardian.${key}`] = value;
         }
     }
-    ;
     const result = yield student_model_1.StudentModel.findOneAndUpdate({ id }, modifyStudentData, { new: true, runValidators: true });
     return result;
 });
@@ -158,5 +161,5 @@ exports.StudentServices = {
     getSingleStudentFromDB,
     deleteStudentFromDB,
     updateStudentInDB,
-    searchStudentDB
+    searchStudentDB,
 };

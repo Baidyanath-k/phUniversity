@@ -33,7 +33,12 @@ export const generateStudentId = async (payload: TAcademicSemester) => {
 };
 
 const findLastFacultyId = async () => {
-  const lastFacultyID = await User.findOne({ role: "faculty" }, { id: 1, _id: 0 }).sort({ createdAt: -1 }).lean();
+  const lastFacultyID = await User.findOne(
+    { role: 'faculty' },
+    { id: 1, _id: 0 },
+  )
+    .sort({ createdAt: -1 })
+    .lean();
 
   if (lastFacultyID?.id) {
     return lastFacultyID.id.substring(2);
@@ -42,13 +47,12 @@ const findLastFacultyId = async () => {
   }
 };
 
-
 export const generatedFacultyId = async () => {
   let currentID = (0).toString();
 
   const lastFacultyID = await findLastFacultyId();
   if (!lastFacultyID) {
-    throw new AppError(500, "Not found last faculty ID!")
+    throw new AppError(500, 'Not found last faculty ID!');
   }
 
   if (lastFacultyID) {
@@ -59,7 +63,6 @@ export const generatedFacultyId = async () => {
   incrementId = `F-${incrementId}`;
 
   return incrementId;
-
 };
 
 const findLastAdminId = async () => {
@@ -79,7 +82,7 @@ export const generatedAdminId = async () => {
 
   const lastAdminId = await findLastAdminId();
   if (!lastAdminId) {
-    throw new AppError(500, "Not found last Admin ID!")
+    throw new AppError(500, 'Not found last Admin ID!');
   }
 
   if (lastAdminId) {
@@ -88,7 +91,6 @@ export const generatedAdminId = async () => {
 
   let incrementId = (Number(currentID) + 1).toString().padStart(4, '0');
 
-
   incrementId = `A-${incrementId}`;
   return incrementId;
-}
+};

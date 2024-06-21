@@ -1,6 +1,5 @@
-import express from "express";
-import { facultiesController } from "./faculty.controller";
-
+import express from 'express';
+import { facultiesController } from './faculty.controller';
 
 const router = express.Router();
 

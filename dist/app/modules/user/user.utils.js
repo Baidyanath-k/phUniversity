@@ -42,7 +42,9 @@ const generateStudentId = (payload) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.generateStudentId = generateStudentId;
 const findLastFacultyId = () => __awaiter(void 0, void 0, void 0, function* () {
-    const lastFacultyID = yield user_model_1.User.findOne({ role: "faculty" }, { id: 1, _id: 0 }).sort({ createdAt: -1 }).lean();
+    const lastFacultyID = yield user_model_1.User.findOne({ role: 'faculty' }, { id: 1, _id: 0 })
+        .sort({ createdAt: -1 })
+        .lean();
     if (lastFacultyID === null || lastFacultyID === void 0 ? void 0 : lastFacultyID.id) {
         return lastFacultyID.id.substring(2);
     }
@@ -54,7 +56,7 @@ const generatedFacultyId = () => __awaiter(void 0, void 0, void 0, function* () 
     let currentID = (0).toString();
     const lastFacultyID = yield findLastFacultyId();
     if (!lastFacultyID) {
-        throw new appError_1.default(500, "Not found last faculty ID!");
+        throw new appError_1.default(500, 'Not found last faculty ID!');
     }
     if (lastFacultyID) {
         currentID = lastFacultyID.substring(2);
@@ -79,7 +81,7 @@ const generatedAdminId = () => __awaiter(void 0, void 0, void 0, function* () {
     let currentID = (0).toString();
     const lastAdminId = yield findLastAdminId();
     if (!lastAdminId) {
-        throw new appError_1.default(500, "Not found last Admin ID!");
+        throw new appError_1.default(500, 'Not found last Admin ID!');
     }
     if (lastAdminId) {
         currentID = lastAdminId.substring(2);

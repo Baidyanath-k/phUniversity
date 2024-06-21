@@ -66,5 +66,5 @@ exports.StudentControllers = {
     getSingleStudentByIdController,
     deleteStudentCont,
     updateStudentCont,
-    searchStudentsController
+    searchStudentsController,
 };

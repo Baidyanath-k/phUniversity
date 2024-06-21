@@ -11,15 +11,20 @@ import { handleZodError } from '../appError/handleZodError';
 import config from '../config';
 import { TErrorSources } from '../errorInterface/error';
 
-export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+export const globalErrorHandler: ErrorRequestHandler = (
+  err,
+  req,
+  res,
+  next,
+) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Something went wrong!';
 
   let errorSources: TErrorSources = [
     {
       path: '',
-      message: 'Something went wrong!'
-    }
+      message: 'Something went wrong!',
+    },
   ];
 
   if (err instanceof ZodError) {
@@ -47,17 +52,17 @@ export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
     message = err?.message;
     errorSources = [
       {
-        path: "",
-        message: err.message
-      }
+        path: '',
+        message: err.message,
+      },
     ];
   } else if (err instanceof Error) {
     message = err?.message;
     errorSources = [
       {
-        path: "",
-        message: err?.message
-      }
+        path: '',
+        message: err?.message,
+      },
     ];
   }
 
@@ -65,7 +70,7 @@ export const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => 
     success: false,
     message,
     errorSources,
-    stack: config.NODE_ENV === "development" ? err?.stack : null
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
 };
 

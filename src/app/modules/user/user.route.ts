@@ -18,14 +18,14 @@ router.post(
 router.post(
   '/create_faculty',
   requestValidate(FacultyZodValidations.createFacultyValidateSchema),
-  userControllers.createFaculty
+  userControllers.createFaculty,
 );
 
 // create admin router
-router.post('/create_admin',
+router.post(
+  '/create_admin',
   requestValidate(adminZodValidation.createAdminValidationSchema),
-  userControllers.createAdminCont
-)
-
+  userControllers.createAdminCont,
+);
 
 export const createUserRoutes = router;

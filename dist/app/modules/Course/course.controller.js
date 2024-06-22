@@ -58,10 +58,32 @@ const updateCourseCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 
         data: result,
     });
 }));
+const assignFacultiesWithCourseCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { courseId } = req.params;
+    const { faculties } = req.body;
+    const result = yield course_service_1.courseServices.assignFacultiesWithCourseIntoDB(courseId, faculties);
+    res.status(200).json({
+        success: true,
+        message: 'Course Faculty update successfully',
+        data: result,
+    });
+}));
+const removeFacultiesWithCourseCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { courseId } = req.params;
+    const { faculties } = req.body;
+    const result = yield course_service_1.courseServices.removeFacultiesWithCourseIntoDB(courseId, faculties);
+    res.status(200).json({
+        success: true,
+        message: 'Course Faculty delete successfully',
+        data: result,
+    });
+}));
 exports.courseControllers = {
     createCourseCont,
     findAllCoursesCont,
     findSingleCourseCont,
     deleteCourseCont,
     updateCourseCont,
+    assignFacultiesWithCourseCont,
+    removeFacultiesWithCourseCont
 };

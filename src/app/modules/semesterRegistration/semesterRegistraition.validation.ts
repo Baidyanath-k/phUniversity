@@ -9,7 +9,7 @@ const createSemesterRegistrationValidateSchema = z.object({
         endDate: z.string().datetime(),
         minCredit: z.number(),
         maxCredit: z.number(),
-    })
+    }),
 });
 
 const updateSemesterRegistrationValidateSchema = z.object({
@@ -20,7 +20,7 @@ const updateSemesterRegistrationValidateSchema = z.object({
         endDate: z.string().datetime().optional(),
         minCredit: z.number().optional(),
         maxCredit: z.number().optional(),
-    })
+    }),
 });
 
 

@@ -11,7 +11,7 @@ const createSemesterRegistrationValidateSchema = zod_1.z.object({
         endDate: zod_1.z.string().datetime(),
         minCredit: zod_1.z.number(),
         maxCredit: zod_1.z.number(),
-    })
+    }),
 });
 const updateSemesterRegistrationValidateSchema = zod_1.z.object({
     body: zod_1.z.object({
@@ -21,7 +21,7 @@ const updateSemesterRegistrationValidateSchema = zod_1.z.object({
         endDate: zod_1.z.string().datetime().optional(),
         minCredit: zod_1.z.number().optional(),
         maxCredit: zod_1.z.number().optional(),
-    })
+    }),
 });
 exports.semesterRegistrationValidate = {
     createSemesterRegistrationValidateSchema,

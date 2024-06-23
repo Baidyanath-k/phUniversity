@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const course_route_1 = require("../modules/Course/course.route");
+const OfferedCourse_route_1 = require("../modules/OfferedCourse/OfferedCourse.route");
 const academicDepartment_route_1 = require("../modules/academicDepartment/academicDepartment.route");
 const academicFaculty_route_1 = require("../modules/academicFaculty/academicFaculty.route");
 const academicSemester_route_1 = require("../modules/academicSemester/academicSemester.route");
@@ -42,6 +43,10 @@ const moduleRoutes = [
     {
         path: '/semester-registration',
         route: semesterRegistration_route_1.semesterRegistrationRoutes,
+    },
+    {
+        path: '/offered-course',
+        route: OfferedCourse_route_1.offeredCourseRoutes,
     },
 ];
 moduleRoutes.forEach((routes) => router.use(routes.path, routes.route));

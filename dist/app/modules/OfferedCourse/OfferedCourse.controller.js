@@ -24,6 +24,16 @@ const createOfferedCourseCont = (0, catchAsync_1.default)((req, res) => __awaite
         data: result,
     });
 }));
+const updateOfferedCourseCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield OfferedCourse_service_1.OfferedCourseServices.updateOfferedCourseIntoDB(id, req.body);
+    res.status(http_status_codes_1.StatusCodes.OK).json({
+        success: true,
+        message: 'Offered course update successfully',
+        data: result,
+    });
+}));
 exports.offeredCourseController = {
-    createOfferedCourseCont
+    createOfferedCourseCont,
+    updateOfferedCourseCont
 };

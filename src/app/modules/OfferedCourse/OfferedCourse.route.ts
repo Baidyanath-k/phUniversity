@@ -9,6 +9,12 @@ router.post(
     '/create-offered-course',
     requestValidate(offeredCourseValidation.createOfferedCourseValidationSchema),
     offeredCourseController.createOfferedCourseCont
+);
+
+router.patch(
+    '/update-offered-course/:id',
+    requestValidate(offeredCourseValidation.updateOfferedCourseValidationSchema),
+    offeredCourseController.updateOfferedCourseCont
 )
 
 

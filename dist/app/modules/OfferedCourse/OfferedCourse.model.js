@@ -42,13 +42,13 @@ const offeredCourseSchema = new mongoose_1.Schema({
         type: Number,
         required: true,
     },
-    days: {
-        type: String,
-        enum: {
-            values: OfferedCourse_const_1.Days,
-            message: `{VALUE} is not a valid status`
-        }
-    },
+    days: [{
+            type: String,
+            enum: {
+                values: OfferedCourse_const_1.Days,
+                message: `{VALUE} is not a valid status`
+            }
+        }],
     startTime: {
         type: String,
         required: true,

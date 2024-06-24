@@ -10,4 +10,5 @@ const OfferedCourse_controller_1 = require("./OfferedCourse.controller");
 const OfferedCourse_validation_1 = require("./OfferedCourse.validation");
 const router = express_1.default.Router();
 router.post('/create-offered-course', (0, validateRequest_1.default)(OfferedCourse_validation_1.offeredCourseValidation.createOfferedCourseValidationSchema), OfferedCourse_controller_1.offeredCourseController.createOfferedCourseCont);
+router.patch('/update-offered-course/:id', (0, validateRequest_1.default)(OfferedCourse_validation_1.offeredCourseValidation.updateOfferedCourseValidationSchema), OfferedCourse_controller_1.offeredCourseController.updateOfferedCourseCont);
 exports.offeredCourseRoutes = router;

@@ -26,6 +26,10 @@ const UserSchema = new mongoose_1.Schema({
         type: String,
         max: 20,
     },
+    needsPasswordChange: {
+        type: Boolean,
+        default: true,
+    },
     role: {
         type: String,
         enum: ['admin', 'student', 'faculty'],
@@ -56,4 +60,14 @@ UserSchema.post('save', function (doc, next) {
         next();
     });
 });
+UserSchema.statics.isUserExistsByCustomID = function (id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield exports.User.findOne({ id });
+    });
+};
+UserSchema.statics.isPasswordMatched = function (plainPassword, hashedPassword) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield bcrypt_1.default.compare(plainPassword, hashedPassword);
+    });
+};
 exports.User = (0, mongoose_1.model)('User', UserSchema);

@@ -1,4 +1,7 @@
-export type TUser = {
+/* eslint-disable no-unused-vars */
+import { Model } from "mongoose";
+
+export interface TUser {
   id: string;
   password: string;
   needsPasswordChange: boolean;
@@ -12,3 +15,10 @@ export type TNewUser = {
   password: string;
   id: string;
 };
+
+
+// use statics method : function definition, actual final declare "Model"
+export interface UserModel extends Model<TUser> {
+  isUserExistsByCustomID(id: string): Promise<TUser>;
+  isPasswordMatched(plainPassword: string, hashedPassword: string): Promise<boolean>
+}

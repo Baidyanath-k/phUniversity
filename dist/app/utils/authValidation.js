@@ -13,15 +13,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_status_codes_1 = require("http-status-codes");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const appError_1 = __importDefault(require("../appError/appError"));
+const config_1 = __importDefault(require("../config"));
 const catchAsync_1 = __importDefault(require("./catchAsync"));
-const authValidate = () => {
+const authValidate = (...requiredRoles) => {
     return (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const token = req.headers.authorization;
+        // if the token is sent form client 
         if (!token) {
             throw new appError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "You are not authorized user!!");
         }
-        next();
+        ;
+        // check if the token is valid
+        jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret, function (err, decoded) {
+            if (err) {
+                throw new appError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "You send invalid token!!");
+            }
+            ;
+            const role = decoded.role;
+            if (requiredRoles && !requiredRoles.includes(role)) {
+                throw new appError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "You are not same token!!");
+            }
+            ;
+            req.user = decoded;
+            next();
+        });
     }));
 };
 exports.default = authValidate;

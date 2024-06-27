@@ -146,6 +146,7 @@ const createAdminIntoDB = async (password: string, payLoad: TAdmin) => {
     session.startTransaction();
 
     const userDataId = await generatedAdminId();
+
     if (!userDataId) {
       throw new AppError(400, 'Not found userData Id!');
     }

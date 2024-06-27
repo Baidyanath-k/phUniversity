@@ -32,6 +32,7 @@ const student_model_1 = require("./student.model");
 // Find ALL Students form MongoDB
 const getAllStudentDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield student_model_1.StudentModel.find()
+        .populate('user')
         .populate('admissionSemester')
         .populate({
         path: 'academicDepartment',
@@ -43,50 +44,6 @@ const getAllStudentDB = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 // search student form MongoDB
 const searchStudentDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    // const queryObj = { ...query };
-    // {email: {$regex: query.searchTerm, $option:i}}
-    // HOW OUR FORMAT SHOULD BE FOR PARTIAL MATCH  :
-    // let searchTerm = '';
-    // if (query?.searchTerm) {
-    //   searchTerm = query?.searchTerm as string
-    // }
-    // const searchTerm = ['email', 'name.firstName', 'presentAddress']
-    // const searchQuery = StudentModel.find({
-    //   $or: searchTerm.map((field) => ({
-    //     [field]: { $regex: searchTerm, $options: 'i' }
-    //   }))
-    // })
-    // FILTERING fUNCTIONALITY:
-    // const excludesFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
-    // excludesFields.forEach((el) => delete queryObj[el]);
-    // const filterQuery = searchQuery.find(queryObj)
-    // SORTING FUNCTIONALITY:
-    // let sort = '-createdAt';
-    // if (query.sort) {
-    //   sort = query.sort as string
-    // }
-    // const sortQuery = filterQuery.sort(sort);
-    // LIMIT FUNCTIONALITY:
-    // let limit = 1;
-    // let page = 1;
-    // let skip = 0;
-    // if (query.limit) {
-    //   limit = Number(query.limit);
-    // }
-    // if (query.page) {
-    //   page = Number(query.page);
-    //   skip = (page - 1) * limit;
-    // }
-    // const paginateQuery = sortQuery.skip(skip);
-    // const limitQuery = paginateQuery.limit(limit);
-    // FIELDS FUNCTIONALITY:
-    // fields = 'name,email' --> 'name email'
-    // let fields = '-__v';
-    // if (query.fields) {
-    //   fields = (query.fields as string).split(',').join(' ');
-    // }
-    // const fieldsQuery = await limitQuery.select(fields);
-    // return fieldsQuery;
     const searchTerm = ['email', 'name.firstName', 'presentAddress'];
     const studentQuery = new QueryBuilder_1.default(student_model_1.StudentModel.find(), query)
         .search(searchTerm)

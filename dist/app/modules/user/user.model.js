@@ -25,10 +25,14 @@ const UserSchema = new mongoose_1.Schema({
     password: {
         type: String,
         max: 20,
+        select: 0,
     },
     needsPasswordChange: {
         type: Boolean,
         default: true,
+    },
+    passwordChangeAt: {
+        type: Date,
     },
     role: {
         type: String,
@@ -62,7 +66,7 @@ UserSchema.post('save', function (doc, next) {
 });
 UserSchema.statics.isUserExistsByCustomID = function (id) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield exports.User.findOne({ id });
+        return yield exports.User.findOne({ id }).select('+password');
     });
 };
 UserSchema.statics.isPasswordMatched = function (plainPassword, hashedPassword) {

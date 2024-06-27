@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generatedAdminId = exports.generatedFacultyId = exports.generateStudentId = void 0;
+const http_status_codes_1 = require("http-status-codes");
 const appError_1 = __importDefault(require("../../appError/appError"));
 const user_model_1 = require("./user.model");
 // Find Last Student ID
@@ -42,6 +43,7 @@ const generateStudentId = (payload) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.generateStudentId = generateStudentId;
 const findLastFacultyId = () => __awaiter(void 0, void 0, void 0, function* () {
+    const currentID = (0).toString();
     const lastFacultyID = yield user_model_1.User.findOne({ role: 'faculty' }, { id: 1, _id: 0 })
         .sort({ createdAt: -1 })
         .lean();
@@ -49,44 +51,38 @@ const findLastFacultyId = () => __awaiter(void 0, void 0, void 0, function* () {
         return lastFacultyID.id.substring(2);
     }
     else {
-        return undefined;
+        return currentID;
     }
 });
 const generatedFacultyId = () => __awaiter(void 0, void 0, void 0, function* () {
-    let currentID = (0).toString();
-    const lastFacultyID = yield findLastFacultyId();
-    if (!lastFacultyID) {
+    let facultyID = yield findLastFacultyId();
+    if (!facultyID) {
         throw new appError_1.default(500, 'Not found last faculty ID!');
     }
-    if (lastFacultyID) {
-        currentID = lastFacultyID.substring(2);
+    if (facultyID) {
+        facultyID = facultyID.substring(2);
     }
-    let incrementId = (Number(currentID) + 1).toString().padStart(4, '0');
+    let incrementId = (Number(facultyID) + 1).toString().padStart(4, '0');
     incrementId = `F-${incrementId}`;
     return incrementId;
 });
 exports.generatedFacultyId = generatedFacultyId;
 const findLastAdminId = () => __awaiter(void 0, void 0, void 0, function* () {
-    const lastAdminId = yield user_model_1.User.findOne({ role: 'admin' }, { id: 1, _id: 0 })
+    const currentID = (0).toString();
+    const lastAdmin = yield user_model_1.User.findOne({ role: 'admin' }, { id: 1, _id: 0 })
         .sort({ createdAt: -1 })
         .lean();
-    if (lastAdminId === null || lastAdminId === void 0 ? void 0 : lastAdminId.id) {
-        return lastAdminId.id.substring(2);
-    }
-    else {
-        return undefined;
-    }
+    return (lastAdmin === null || lastAdmin === void 0 ? void 0 : lastAdmin.id) ? lastAdmin.id.substring(2) : currentID;
 });
 const generatedAdminId = () => __awaiter(void 0, void 0, void 0, function* () {
-    let currentID = (0).toString();
-    const lastAdminId = yield findLastAdminId();
-    if (!lastAdminId) {
-        throw new appError_1.default(500, 'Not found last Admin ID!');
+    let adminId = yield findLastAdminId();
+    if (!adminId) {
+        throw new appError_1.default(http_status_codes_1.StatusCodes.NOT_FOUND, "Last Admin Id is not found!");
     }
-    if (lastAdminId) {
-        currentID = lastAdminId.substring(2);
+    if (adminId) {
+        adminId = adminId.substring(2);
     }
-    let incrementId = (Number(currentID) + 1).toString().padStart(4, '0');
+    let incrementId = (Number(adminId) + 1).toString().padStart(4, '0');
     incrementId = `A-${incrementId}`;
     return incrementId;
 });

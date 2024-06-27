@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import AppError from '../../appError/appError';
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 import { User } from './user.model';
@@ -33,6 +34,7 @@ export const generateStudentId = async (payload: TAcademicSemester) => {
 };
 
 const findLastFacultyId = async () => {
+  const currentID = (0).toString();
   const lastFacultyID = await User.findOne(
     { role: 'faculty' },
     { id: 1, _id: 0 },
@@ -43,53 +45,50 @@ const findLastFacultyId = async () => {
   if (lastFacultyID?.id) {
     return lastFacultyID.id.substring(2);
   } else {
-    return undefined;
+    return currentID;
   }
 };
 
 export const generatedFacultyId = async () => {
-  let currentID = (0).toString();
 
-  const lastFacultyID = await findLastFacultyId();
-  if (!lastFacultyID) {
+  let facultyID = await findLastFacultyId();
+  if (!facultyID) {
     throw new AppError(500, 'Not found last faculty ID!');
   }
 
-  if (lastFacultyID) {
-    currentID = lastFacultyID.substring(2);
+  if (facultyID) {
+    facultyID = facultyID.substring(2);
   }
 
-  let incrementId = (Number(currentID) + 1).toString().padStart(4, '0');
+  let incrementId = (Number(facultyID) + 1).toString().padStart(4, '0');
   incrementId = `F-${incrementId}`;
 
   return incrementId;
 };
 
 const findLastAdminId = async () => {
-  const lastAdminId = await User.findOne({ role: 'admin' }, { id: 1, _id: 0 })
+  const currentID = (0).toString();
+  const lastAdmin = await User.findOne({ role: 'admin' }, { id: 1, _id: 0 })
     .sort({ createdAt: -1 })
     .lean();
 
-  if (lastAdminId?.id) {
-    return lastAdminId.id.substring(2);
-  } else {
-    return undefined;
-  }
+
+  return lastAdmin?.id ? lastAdmin.id.substring(2) : currentID;
 };
 
 export const generatedAdminId = async () => {
-  let currentID = (0).toString();
 
-  const lastAdminId = await findLastAdminId();
-  if (!lastAdminId) {
-    throw new AppError(500, 'Not found last Admin ID!');
+
+  let adminId = await findLastAdminId();
+  if (!adminId) {
+    throw new AppError(StatusCodes.NOT_FOUND, "Last Admin Id is not found!")
   }
 
-  if (lastAdminId) {
-    currentID = lastAdminId.substring(2);
+  if (adminId) {
+    adminId = adminId.substring(2);
   }
 
-  let incrementId = (Number(currentID) + 1).toString().padStart(4, '0');
+  let incrementId = (Number(adminId) + 1).toString().padStart(4, '0');
 
   incrementId = `A-${incrementId}`;
   return incrementId;

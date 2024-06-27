@@ -7,6 +7,7 @@ const OfferedCourse_route_1 = require("../modules/OfferedCourse/OfferedCourse.ro
 const academicDepartment_route_1 = require("../modules/academicDepartment/academicDepartment.route");
 const academicFaculty_route_1 = require("../modules/academicFaculty/academicFaculty.route");
 const academicSemester_route_1 = require("../modules/academicSemester/academicSemester.route");
+const admin_route_1 = require("../modules/admin/admin.route");
 const faculty_route_1 = require("../modules/faculty/faculty.route");
 const semesterRegistration_route_1 = require("../modules/semesterRegistration/semesterRegistration.route");
 const student_route_1 = require("../modules/student/student.route");
@@ -20,6 +21,10 @@ const moduleRoutes = [
     {
         path: '/students',
         route: student_route_1.StudentRoutes,
+    },
+    {
+        path: '/admin',
+        route: admin_route_1.adminRouter,
     },
     {
         path: '/academic_semesters',

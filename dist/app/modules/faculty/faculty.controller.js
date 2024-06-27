@@ -16,6 +16,7 @@ exports.facultiesController = void 0;
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const faculty_service_1 = require("./faculty.service");
 const getAllFacultiesCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("text", req.user);
     const result = yield faculty_service_1.facultyServices.getAllFacultyIntoDB();
     res.status(200).json({
         success: true,

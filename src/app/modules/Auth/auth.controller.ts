@@ -11,8 +11,21 @@ const loginUserCont = catchAsync(async (req, res) => {
     });
 });
 
+const changedPasswordCont = catchAsync(async (req, res) => {
+
+    const { ...passwordData } = req.body;
+    const result = await authServices.changedPasswordSer(req.user, passwordData);
+
+    res.status(StatusCodes.OK).json({
+        success: true,
+        message: 'Password changed successfully....',
+        data: result,
+    });
+});
+
 
 
 export const authController = {
-    loginUserCont
+    loginUserCont,
+    changedPasswordCont
 }

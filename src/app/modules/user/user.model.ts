@@ -13,10 +13,14 @@ const UserSchema = new Schema<TUser, UserModel>(
     password: {
       type: String,
       max: 20,
+      select: 0,
     },
     needsPasswordChange: {
       type: Boolean,
       default: true,
+    },
+    passwordChangeAt: {
+      type: Date,
     },
     role: {
       type: String,
@@ -50,7 +54,7 @@ UserSchema.post('save', async function (doc, next) {
 });
 
 UserSchema.statics.isUserExistsByCustomID = async function (id: string) {
-  return await User.findOne({ id })
+  return await User.findOne({ id }).select('+password');
 };
 
 UserSchema.statics.isPasswordMatched = async function (plainPassword, hashedPassword) {

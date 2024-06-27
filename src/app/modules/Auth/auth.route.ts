@@ -21,6 +21,13 @@ router.post(
     authValidate(USER_ROLE.admin, USER_ROLE.faculty, USER_ROLE.student),
     requestValidate(authValidation.changedPasswordValidationSchema),
     authController.changedPasswordCont,
+);
+
+// refresh Token router
+router.post(
+    '/refresh-token',
+    requestValidate(authValidation.refreshTokenValidationSchema),
+    authController.refreshTokenCont
 )
 
 

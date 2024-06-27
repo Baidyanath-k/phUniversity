@@ -25,5 +25,9 @@ export type TUserRole = keyof typeof USER_ROLE;
 // use statics method : function definition, actual final declare "Model"
 export interface UserModel extends Model<TUser> {
   isUserExistsByCustomID(id: string): Promise<TUser>;
-  isPasswordMatched(plainPassword: string, hashedPassword: string): Promise<boolean>
+  isPasswordMatched(plainPassword: string, hashedPassword: string): Promise<boolean>;
+  isJWTIssuedBeforePasswordChanged(
+    passwordChangeTimestamp: Date, 
+    jwtIssuedTimestamp: number
+  ): boolean;
 };

@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Request, Response } from 'express';
 import router from './app/allRoutes';
@@ -6,6 +7,7 @@ import { notFountRoute } from './app/middlewares/notFoundRout';
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser())
 app.use(cors());
 
 // route call by (allRoutes--> index.ts)

@@ -74,4 +74,11 @@ UserSchema.statics.isPasswordMatched = function (plainPassword, hashedPassword) 
         return yield bcrypt_1.default.compare(plainPassword, hashedPassword);
     });
 };
+// jwt time and password update time check
+UserSchema.statics.isJWTIssuedBeforePasswordChanged = function (passwordChangeTimestamp, jwtIssuedTimestamp) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const passwordChangeTime = new Date(passwordChangeTimestamp).getTime() / 1000;
+        return passwordChangeTime > jwtIssuedTimestamp;
+    });
+};
 exports.User = (0, mongoose_1.model)('User', UserSchema);

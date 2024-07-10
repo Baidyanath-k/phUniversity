@@ -27,7 +27,13 @@ const authValidate = (...requiredRoles) => {
         }
         ;
         // check if the token is valid
-        const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret);
+        let decoded;
+        try {
+            decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_access_secret);
+        }
+        catch (error) {
+            throw new appError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, "You are not authorized user!!");
+        }
         const { userId, role, iat } = decoded;
         const user = yield user_model_1.User.isUserExistsByCustomID(userId);
         if (!user) {

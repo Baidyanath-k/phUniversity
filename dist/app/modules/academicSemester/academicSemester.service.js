@@ -19,6 +19,11 @@ const createAcademicSemesterInDB = (payload) => __awaiter(void 0, void 0, void 0
     const result = yield academicSemester_model_1.AcademicSemester.create(payload);
     return result;
 });
+const getAllAcademicSemesterFormDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield academicSemester_model_1.AcademicSemester.find();
+    return result;
+});
 exports.academicSemesterService = {
     createAcademicSemesterInDB,
+    getAllAcademicSemesterFormDB
 };

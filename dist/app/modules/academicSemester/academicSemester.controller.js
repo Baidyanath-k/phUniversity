@@ -23,6 +23,15 @@ const createAcademicSemCont = (0, catchAsync_1.default)((req, res) => __awaiter(
         data: result,
     });
 }));
+const getAllAcademicSemCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield academicSemester_service_1.academicSemesterService.getAllAcademicSemesterFormDB();
+    res.status(200).json({
+        success: true,
+        message: 'All Academic semester get successful',
+        data: result,
+    });
+}));
 exports.AcademicSemesterController = {
     createAcademicSemCont,
+    getAllAcademicSemCont
 };

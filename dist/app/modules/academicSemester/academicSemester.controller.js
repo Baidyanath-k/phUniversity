@@ -24,7 +24,7 @@ const createAcademicSemCont = (0, catchAsync_1.default)((req, res) => __awaiter(
     });
 }));
 const getAllAcademicSemCont = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield academicSemester_service_1.academicSemesterService.getAllAcademicSemesterFormDB();
+    const result = yield academicSemester_service_1.academicSemesterService.getAllAcademicSemesterFormDB(req.query);
     res.status(200).json({
         success: true,
         message: 'All Academic semester get successful',

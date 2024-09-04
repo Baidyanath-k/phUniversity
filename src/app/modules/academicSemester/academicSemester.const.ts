@@ -28,8 +28,10 @@ export const AcademicSemNameModel: TAcademicSemName[] = [
 export const AcademicSemCodeModel: TAcademicSemCode[] = ['01', '02', '03'];
 
 export const academicSemesterCodeAndNameValidate: TAcademicSemesterCodeAndNameValidate =
-  {
-    Autumn: '01',
-    Summer: '02',
-    Fall: '03',
-  };
+{
+  Autumn: '01',
+  Summer: '02',
+  Fall: '03',
+};
+
+export const AcademicSemesterSearchableFields = ['name', 'year'];

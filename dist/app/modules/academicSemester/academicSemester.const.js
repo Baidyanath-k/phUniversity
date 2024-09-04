@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.academicSemesterCodeAndNameValidate = exports.AcademicSemCodeModel = exports.AcademicSemNameModel = exports.months = void 0;
+exports.AcademicSemesterSearchableFields = exports.academicSemesterCodeAndNameValidate = exports.AcademicSemCodeModel = exports.AcademicSemNameModel = exports.months = void 0;
 exports.months = [
     'January',
     'February',
@@ -26,3 +26,4 @@ exports.academicSemesterCodeAndNameValidate = {
     Summer: '02',
     Fall: '03',
 };
+exports.AcademicSemesterSearchableFields = ['name', 'year'];

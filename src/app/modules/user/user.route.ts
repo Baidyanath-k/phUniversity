@@ -1,5 +1,6 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import authValidate from '../../utils/authValidation';
+import { upload } from '../../utils/sendImageToClouderyMulter';
 import requestValidate from '../../utils/validateRequest';
 import { adminZodValidation } from '../admin/admin.validation';
 import { FacultyZodValidations } from '../faculty/faculty.validate';
@@ -13,6 +14,11 @@ const router = express.Router();
 router.post(
   '/create_student',
   authValidate(USER_ROLE.admin),
+  upload.single('file'),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   requestValidate(stu_Zod_Valid_Schema.createStudentValidation),
   userControllers.createStudent,
 );

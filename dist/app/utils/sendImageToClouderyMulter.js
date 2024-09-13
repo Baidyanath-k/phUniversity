@@ -9,13 +9,15 @@ const fs_1 = __importDefault(require("fs"));
 const multer_1 = __importDefault(require("multer"));
 const config_1 = __importDefault(require("../config"));
 cloudinary_1.v2.config({
-    cloud_name: config_1.default.cloudinary_cloud_name,
-    api_key: config_1.default.cloudinary_api_key,
-    api_secret: config_1.default, .83: qQ84M9V5T8qRTC1nI_xMYuc_g,
+    cloud_name: config_1.default.CLOUDINARY_Cloud_Name,
+    api_key: config_1.default.CLOUDINARY_Api_Key,
+    api_secret: config_1.default.CLOUDINARY_Api_Secret,
 });
 const sendImageToCloudinary = (imageName, path) => {
     return new Promise((resolve, reject) => {
-        cloudinary_1.v2.uploader.upload(path, { public_id: imageName.trim() }, function (error, result) {
+        cloudinary_1.v2.uploader.upload(path, { public_id: imageName.trim() }, 
+        // Ensure file deletion is done regardless of success or error
+        function (error, result) {
             if (error) {
                 reject(error);
             }

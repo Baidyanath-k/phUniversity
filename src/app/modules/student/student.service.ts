@@ -2,21 +2,55 @@ import mongoose from 'mongoose';
 import AppError from '../../appError/appError';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { User } from '../user/user.model';
+import { searchAbleFields } from './student.const';
 import { Student } from './student.interface';
 import { StudentModel } from './student.model';
 
 // Find ALL Students form MongoDB
-const getAllStudentDB = async () => {
-  const result = await StudentModel.find()
-    .populate('user')
-    .populate('admissionSemester')
-  .populate({
-    path: 'academicDepartment',
-    populate: {
-      path: 'refAcademicFaculty',
-    },
-  });
-return result;
+// const getAllStudentDB = async (query: Record<string, unknown>) => {
+//   const studentQuery = new QueryBuilder(
+//     StudentModel.find()
+//       .populate('user')
+//       .populate('admissionSemester')
+//       .populate({
+//         path: 'academicDepartment',
+//         populate: {
+//           path: 'refAcademicFaculty',
+//         },
+//       }),
+//     query
+//   ).search(searchAbleFields).filter().sort().paginate().fields();
+
+//   const meta = studentQuery.countTotal();
+//   const result = studentQuery.modelQuery;
+
+//   return {
+//     meta,
+//     result
+//   };
+// };
+
+const getAllStudentDB = async (query: Record<string, unknown>) => {
+  const studentQuery = new QueryBuilder(
+    StudentModel.find()
+      .populate('user')
+      .populate('admissionSemester')
+      .populate('academicDepartment academicFaculty'),
+    query,
+  )
+    .search(searchAbleFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const meta = await studentQuery.countTotal();
+  const result = await studentQuery.modelQuery;
+
+  return {
+    meta,
+    result,
+  };
 };
 
 // search student form MongoDB

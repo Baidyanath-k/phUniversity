@@ -1,12 +1,14 @@
+import { RequestHandler } from 'express';
 import catchAsync from '../../utils/catchAsync';
 import { StudentServices } from './student.service';
 
-const getAllStudentsController = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentDB();
+const getAllStudentsController: RequestHandler = catchAsync(async (req, res) => {
+  const { meta, result } = await StudentServices.getAllStudentDB(req.query);
   res.status(200).json({
     success: true,
     message: 'All students is get successfully',
-    data: result,
+    meta,
+    result,
   });
 });
 

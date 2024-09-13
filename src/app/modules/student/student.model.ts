@@ -108,7 +108,7 @@ const StudentSchema = new Schema<Student>(
       type: String,
       required: [true, 'Emergency contact number is required'],
     },
-    dateOfBirth: { type: String },
+    dateOfBirth: { type: Date },
     bloodGroup: {
       type: String,
       enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
@@ -123,15 +123,13 @@ const StudentSchema = new Schema<Student>(
     },
     admissionSemester: {
       type: Schema.Types.ObjectId,
-      required: [true, 'Academic Semester MongoDB ID must be required'],
-      unique: true,
       ref: 'AcademicSemester',
     },
     guardian: {
       type: studentGuardianSchema,
       required: [true, 'Guardian information is required'],
     },
-    profileImg: { type: String },
+    profileImg: { type: String, default: "" },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -140,12 +138,18 @@ const StudentSchema = new Schema<Student>(
       type: Schema.Types.ObjectId,
       ref: 'AcademicDepartment',
     },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: 'academicFaculty',
+    },
+
     localGuardian: {
       type: studentLocalGuardianSchema,
     },
   },
   { toJSON: { virtuals: true } },
 );
+
 
 StudentSchema.virtual('fullName').get(function () {
   return (

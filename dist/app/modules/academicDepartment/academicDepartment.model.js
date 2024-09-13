@@ -24,7 +24,6 @@ const AcademicDepartmentSchema = new mongoose_1.Schema({
     refAcademicFaculty: {
         type: mongoose_1.Schema.Types.ObjectId,
         required: [true, 'Academic Faculty must be required'],
-        unique: true,
         ref: 'academicFaculty',
     },
 }, { timestamps: true });

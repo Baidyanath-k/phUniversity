@@ -6,9 +6,9 @@ import config from '../config';
 
 
 cloudinary.config({
-    cloud_name: config.cloudinary_cloud_name,
-    api_key: config.cloudinary_api_key,
-    api_secret: config.83qQ84M9V5T8qRTC1nI_xMYuc_g,
+    cloud_name: config.CLOUDINARY_Cloud_Name,
+    api_key: config.CLOUDINARY_Api_Key,
+    api_secret: config.CLOUDINARY_Api_Secret,
 })
 
 export const sendImageToCloudinary = (
@@ -19,6 +19,7 @@ export const sendImageToCloudinary = (
         cloudinary.uploader.upload(
             path,
             { public_id: imageName.trim() },
+            // Ensure file deletion is done regardless of success or error
             function (error, result) {
                 if (error) {
                     reject(error);

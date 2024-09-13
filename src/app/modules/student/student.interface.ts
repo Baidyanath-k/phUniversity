@@ -30,7 +30,7 @@ export type Student = {
   email: string;
   contactNo: string;
   emergencyContactNo: string;
-  dateOfBirth?: string;
+  dateOfBirth?: Date;
   bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   presentAddress: string;
   permanentAddress: string;
@@ -39,5 +39,6 @@ export type Student = {
   profileImg?: string;
   isDeleted: boolean;
   academicDepartment: Types.ObjectId;
+  academicFaculty: Types.ObjectId;
   localGuardian?: LocalGuardian;
 };

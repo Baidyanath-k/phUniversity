@@ -1,11 +1,10 @@
-import mongoose from 'mongoose';
 import validator from 'validator';
 import { z } from 'zod';
 
 // mongoose ID validation
-const objectIdValidation = (id: string) => {
-  return mongoose.Types.ObjectId.isValid(id);
-};
+// const objectIdValidation = (id: string) => {
+//   return mongoose.Types.ObjectId.isValid(id);
+// };
 
 // create Define the name schema
 const studentNameSchema = z.object({
@@ -90,11 +89,8 @@ const createStudentValidation = z.object({
         .string()
         .min(1, { message: 'Present address is required' }),
       permanentAddress: z.string(),
-      admissionSemester: z
-        .string()
-        .refine(objectIdValidation, { message: 'Invalid ObjectId' }),
+      admissionSemester: z.string(),
       guardian: studentGuardianSchema,
-      profileImg: z.string().optional(),
       academicDepartment: z.string(),
       localGuardian: studentLocalGuardianSchema.optional(),
     }),
@@ -215,7 +211,6 @@ const updateStudentValidation = z.object({
       permanentAddress: z.string().optional(),
       admissionSemester: z
         .string()
-        .refine(objectIdValidation, { message: 'Invalid ObjectId' })
         .optional(),
       guardian: updateStudentGuardianSchema.optional(),
       profileImg: z.string().optional(),

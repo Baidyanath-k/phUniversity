@@ -16,7 +16,10 @@ const user_controller_1 = require("./user.controller");
 const router = express_1.default.Router();
 // create student router
 router.post('/create_student', (0, authValidation_1.default)(user_const_1.USER_ROLE.admin), sendImageToClouderyMulter_1.upload.single('file'), (req, res, next) => {
-    req.body = JSON.parse(req.body.data);
+    var _a;
+    if ((_a = req.body) === null || _a === void 0 ? void 0 : _a.data) {
+        req.body = JSON.parse(req.body.data);
+    }
     next();
 }, (0, validateRequest_1.default)(student_validate_1.stu_Zod_Valid_Schema.createStudentValidation), user_controller_1.userControllers.createStudent);
 // create faculty router

@@ -28,19 +28,45 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const appError_1 = __importDefault(require("../../appError/appError"));
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const user_model_1 = require("../user/user.model");
+const student_const_1 = require("./student.const");
 const student_model_1 = require("./student.model");
 // Find ALL Students form MongoDB
-const getAllStudentDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield student_model_1.StudentModel.find()
+// const getAllStudentDB = async (query: Record<string, unknown>) => {
+//   const studentQuery = new QueryBuilder(
+//     StudentModel.find()
+//       .populate('user')
+//       .populate('admissionSemester')
+//       .populate({
+//         path: 'academicDepartment',
+//         populate: {
+//           path: 'refAcademicFaculty',
+//         },
+//       }),
+//     query
+//   ).search(searchAbleFields).filter().sort().paginate().fields();
+//   const meta = studentQuery.countTotal();
+//   const result = studentQuery.modelQuery;
+//   return {
+//     meta,
+//     result
+//   };
+// };
+const getAllStudentDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const studentQuery = new QueryBuilder_1.default(student_model_1.StudentModel.find()
         .populate('user')
         .populate('admissionSemester')
-        .populate({
-        path: 'academicDepartment',
-        populate: {
-            path: 'refAcademicFaculty',
-        },
-    });
-    return result;
+        .populate('academicDepartment academicFaculty'), query)
+        .search(student_const_1.searchAbleFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const meta = yield studentQuery.countTotal();
+    const result = yield studentQuery.modelQuery;
+    return {
+        meta,
+        result,
+    };
 });
 // search student form MongoDB
 const searchStudentDB = (query) => __awaiter(void 0, void 0, void 0, function* () {

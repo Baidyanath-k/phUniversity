@@ -16,7 +16,9 @@ router.post(
   authValidate(USER_ROLE.admin),
   upload.single('file'),
   (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
+    if (req.body?.data) {
+      req.body = JSON.parse(req.body.data);
+    }
     next();
   },
   requestValidate(stu_Zod_Valid_Schema.createStudentValidation),

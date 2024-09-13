@@ -4,13 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.stu_Zod_Valid_Schema = void 0;
-const mongoose_1 = __importDefault(require("mongoose"));
 const validator_1 = __importDefault(require("validator"));
 const zod_1 = require("zod");
 // mongoose ID validation
-const objectIdValidation = (id) => {
-    return mongoose_1.default.Types.ObjectId.isValid(id);
-};
+// const objectIdValidation = (id: string) => {
+//   return mongoose.Types.ObjectId.isValid(id);
+// };
 // create Define the name schema
 const studentNameSchema = zod_1.z.object({
     firstName: zod_1.z
@@ -86,11 +85,8 @@ const createStudentValidation = zod_1.z.object({
                 .string()
                 .min(1, { message: 'Present address is required' }),
             permanentAddress: zod_1.z.string(),
-            admissionSemester: zod_1.z
-                .string()
-                .refine(objectIdValidation, { message: 'Invalid ObjectId' }),
+            admissionSemester: zod_1.z.string(),
             guardian: studentGuardianSchema,
-            profileImg: zod_1.z.string().optional(),
             academicDepartment: zod_1.z.string(),
             localGuardian: studentLocalGuardianSchema.optional(),
         }),
@@ -201,7 +197,6 @@ const updateStudentValidation = zod_1.z.object({
             permanentAddress: zod_1.z.string().optional(),
             admissionSemester: zod_1.z
                 .string()
-                .refine(objectIdValidation, { message: 'Invalid ObjectId' })
                 .optional(),
             guardian: updateStudentGuardianSchema.optional(),
             profileImg: zod_1.z.string().optional(),

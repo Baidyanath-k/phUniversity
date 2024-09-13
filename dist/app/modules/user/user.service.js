@@ -17,6 +17,7 @@ exports.userService = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const appError_1 = __importDefault(require("../../appError/appError"));
 const config_1 = __importDefault(require("../../config"));
+const sendImageToClouderyMulter_1 = require("../../utils/sendImageToClouderyMulter");
 const academicDepartment_model_1 = require("../academicDepartment/academicDepartment.model");
 const academicSemester_model_1 = require("../academicSemester/academicSemester.model");
 const admin_model_1 = require("../admin/admin.model");
@@ -24,7 +25,8 @@ const faculty_model_1 = require("../faculty/faculty.model");
 const student_model_1 = require("../student/student.model");
 const user_model_1 = require("./user.model");
 const user_utils_1 = require("./user.utils");
-const createStudentIntoDB = (password, payLoad) => __awaiter(void 0, void 0, void 0, function* () {
+const createStudentIntoDB = (file, password, payLoad) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     // create user->student
     const userData = {};
     // If password not given then set default password
@@ -36,8 +38,19 @@ const createStudentIntoDB = (password, payLoad) => __awaiter(void 0, void 0, voi
     }
     // set role = student
     userData.role = 'student';
+    // set student email
+    userData.email = payLoad.email;
     // find ID by academic semester
     const admissionSemester = yield academicSemester_model_1.AcademicSemester.findById(payLoad.admissionSemester);
+    if (!admissionSemester) {
+        throw new appError_1.default(400, 'Admission semester not found');
+    }
+    // find department
+    const academicDepartment = yield academicDepartment_model_1.AcademicDepartment.findById(payLoad.academicDepartment);
+    if (!academicDepartment) {
+        throw new appError_1.default(400, 'Aademic department not found');
+    }
+    payLoad.academicFaculty = academicDepartment.refAcademicFaculty;
     // transaction rollback start
     const session = yield mongoose_1.default.startSession(); // create a session
     try {
@@ -48,6 +61,14 @@ const createStudentIntoDB = (password, payLoad) => __awaiter(void 0, void 0, voi
         }
         else {
             userData.id = yield (0, user_utils_1.generateStudentId)(admissionSemester);
+        }
+        // userData.id = await generateStudentId(admissionSemester);
+        if (file) {
+            const imageName = `${userData.id}${(_a = payLoad === null || payLoad === void 0 ? void 0 : payLoad.name) === null || _a === void 0 ? void 0 : _a.firstName}`;
+            const path = file === null || file === void 0 ? void 0 : file.path;
+            // send Image Cloudinary
+            const { secure_url } = yield (0, sendImageToClouderyMulter_1.sendImageToCloudinary)(imageName, path);
+            payLoad.profileImg = secure_url;
         }
         // create a user(transaction-1)
         const newUser = yield user_model_1.User.create([userData], { session }); // session e data array hisebe dite hobe

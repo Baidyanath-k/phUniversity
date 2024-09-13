@@ -1,0 +1,1 @@
+export const searchAbleFields = ["id", "name.firstName", "name.secondName", "name.lastName"]

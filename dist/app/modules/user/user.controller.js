@@ -13,13 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userControllers = void 0;
-const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const user_service_1 = require("./user.service");
 const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { password, student: studentData } = req.body;
-    const result = yield user_service_1.userService.createStudentIntoDB(password, studentData);
-    res.status(http_status_1.default.OK).json({
+    const result = yield user_service_1.userService.createStudentIntoDB(req.file, password, studentData);
+    res.status(200).json({
         success: true,
         message: 'Student create successfully',
         data: result,

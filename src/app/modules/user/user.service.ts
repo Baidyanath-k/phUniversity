@@ -2,6 +2,7 @@
 import mongoose from 'mongoose';
 import AppError from '../../appError/appError';
 import config from '../../config';
+import { sendImageToCloudinary } from '../../utils/sendImageToClouderyMulter';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TAdmin } from '../admin/admin.interface';
@@ -18,7 +19,7 @@ import {
   generatedFacultyId,
 } from './user.utils';
 
-const createStudentIntoDB = async (password: string, payLoad: Student) => {
+const createStudentIntoDB = async (file: any, password: string, payLoad: Student) => {
   // create user->student
   const userData: Partial<TUser> = {};
 
@@ -32,10 +33,28 @@ const createStudentIntoDB = async (password: string, payLoad: Student) => {
   // set role = student
   userData.role = 'student';
 
+  // set student email
+  userData.email = payLoad.email;
+
   // find ID by academic semester
   const admissionSemester = await AcademicSemester.findById(
     payLoad.admissionSemester,
   );
+
+  if (!admissionSemester) {
+    throw new AppError(400, 'Admission semester not found');
+  }
+
+
+  // find department
+  const academicDepartment = await AcademicDepartment.findById(
+    payLoad.academicDepartment,
+  );
+
+  if (!academicDepartment) {
+    throw new AppError(400, 'Aademic department not found');
+  }
+  payLoad.academicFaculty = academicDepartment.refAcademicFaculty;
 
   // transaction rollback start
 
@@ -50,6 +69,20 @@ const createStudentIntoDB = async (password: string, payLoad: Student) => {
     } else {
       userData.id = await generateStudentId(admissionSemester);
     }
+
+    // userData.id = await generateStudentId(admissionSemester);
+
+    if (file) {
+      const imageName = `${userData.id}${payLoad?.name?.firstName}`;
+      const path = file?.path;
+
+      // send Image Cloudinary
+      const { secure_url } = await sendImageToCloudinary(imageName, path);
+
+      payLoad.profileImg = secure_url as string;
+    }
+
+
 
     // create a user(transaction-1)
     const newUser = await User.create([userData], { session }); // session e data array hisebe dite hobe

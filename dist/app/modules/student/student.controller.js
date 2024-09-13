@@ -16,11 +16,14 @@ exports.StudentControllers = void 0;
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const student_service_1 = require("./student.service");
 const getAllStudentsController = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield student_service_1.StudentServices.getAllStudentDB();
+    const { meta, result } = yield student_service_1.StudentServices.getAllStudentDB(req.query);
+    // console.log(meta)
+    // console.log(result)
     res.status(200).json({
         success: true,
         message: 'All students is get successfully',
-        data: result,
+        meta,
+        result,
     });
 }));
 // search student controller

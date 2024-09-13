@@ -108,7 +108,7 @@ const StudentSchema = new mongoose_1.Schema({
         type: String,
         required: [true, 'Emergency contact number is required'],
     },
-    dateOfBirth: { type: String },
+    dateOfBirth: { type: Date },
     bloodGroup: {
         type: String,
         enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
@@ -123,15 +123,13 @@ const StudentSchema = new mongoose_1.Schema({
     },
     admissionSemester: {
         type: mongoose_1.Schema.Types.ObjectId,
-        required: [true, 'Academic Semester MongoDB ID must be required'],
-        unique: true,
         ref: 'AcademicSemester',
     },
     guardian: {
         type: studentGuardianSchema,
         required: [true, 'Guardian information is required'],
     },
-    profileImg: { type: String },
+    profileImg: { type: String, default: "" },
     isDeleted: {
         type: Boolean,
         default: false,
@@ -139,6 +137,10 @@ const StudentSchema = new mongoose_1.Schema({
     academicDepartment: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'AcademicDepartment',
+    },
+    academicFaculty: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: 'academicFaculty',
     },
     localGuardian: {
         type: studentLocalGuardianSchema,

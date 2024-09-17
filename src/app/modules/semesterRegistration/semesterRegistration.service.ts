@@ -13,13 +13,31 @@ const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) 
     // check: already "UPCOMING"/"ONGOING" register semester
     const isUpcomingOrOngoing = await SemesterRegistration.findOne({
         $or: [
-            { status: RegistrationStatus.UPCOMING },
             { status: RegistrationStatus.ONGOING },
+            { status: RegistrationStatus.UPCOMING },
         ]
     });
     if (isUpcomingOrOngoing?.status === 'UPCOMING' || isUpcomingOrOngoing?.status === "ONGOING") {
         throw new AppError(StatusCodes.BAD_REQUEST, `There is already an ${isUpcomingOrOngoing?.status} register semester!`);
     };
+
+
+
+    // const isUpcoming = await SemesterRegistration.findOne({
+    //     status: RegistrationStatus.UPCOMING,
+    // });
+
+    // if (isUpcoming) {
+    //     throw new AppError(StatusCodes.BAD_REQUEST, `There is already an UPCOMING semester registration!`);
+    // }
+
+    // const isOngoing = await SemesterRegistration.findOne({
+    //     status: RegistrationStatus.ONGOING,
+    // });
+
+    // if (isOngoing) {
+    //     throw new AppError(StatusCodes.BAD_REQUEST, `There is already an ONGOING semester registration!`);
+    // }
 
     // validation Academic semester
     const isAcademicSemesterExists = await AcademicSemester.findById(academicSemester);
@@ -44,8 +62,12 @@ const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) 
 const getAllSemesterRegistrationFormDB = async (query: Record<string, unknown>) => {
     const semesterRegistrationQuery = new QueryBuilder(SemesterRegistration.find().populate('academicSemester'), query).filter().sort().paginate().fields();
 
+    const meta = await semesterRegistrationQuery.countTotal();
     const result = await semesterRegistrationQuery.modelQuery;
-    return result;
+    return {
+        meta,
+        result
+    };
 
 };
 

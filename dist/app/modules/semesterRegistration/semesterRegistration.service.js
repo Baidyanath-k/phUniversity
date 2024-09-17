@@ -24,14 +24,26 @@ const createSemesterRegistrationIntoDB = (payload) => __awaiter(void 0, void 0, 
     // check: already "UPCOMING"/"ONGOING" register semester
     const isUpcomingOrOngoing = yield semesterRegistration_model_1.SemesterRegistration.findOne({
         $or: [
-            { status: semesterRegistration_const_1.RegistrationStatus.UPCOMING },
             { status: semesterRegistration_const_1.RegistrationStatus.ONGOING },
+            { status: semesterRegistration_const_1.RegistrationStatus.UPCOMING },
         ]
     });
     if ((isUpcomingOrOngoing === null || isUpcomingOrOngoing === void 0 ? void 0 : isUpcomingOrOngoing.status) === 'UPCOMING' || (isUpcomingOrOngoing === null || isUpcomingOrOngoing === void 0 ? void 0 : isUpcomingOrOngoing.status) === "ONGOING") {
         throw new appError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, `There is already an ${isUpcomingOrOngoing === null || isUpcomingOrOngoing === void 0 ? void 0 : isUpcomingOrOngoing.status} register semester!`);
     }
     ;
+    // const isUpcoming = await SemesterRegistration.findOne({
+    //     status: RegistrationStatus.UPCOMING,
+    // });
+    // if (isUpcoming) {
+    //     throw new AppError(StatusCodes.BAD_REQUEST, `There is already an UPCOMING semester registration!`);
+    // }
+    // const isOngoing = await SemesterRegistration.findOne({
+    //     status: RegistrationStatus.ONGOING,
+    // });
+    // if (isOngoing) {
+    //     throw new AppError(StatusCodes.BAD_REQUEST, `There is already an ONGOING semester registration!`);
+    // }
     // validation Academic semester
     const isAcademicSemesterExists = yield academicSemester_model_1.AcademicSemester.findById(academicSemester);
     if (!isAcademicSemesterExists) {
@@ -49,8 +61,12 @@ const createSemesterRegistrationIntoDB = (payload) => __awaiter(void 0, void 0, 
 });
 const getAllSemesterRegistrationFormDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const semesterRegistrationQuery = new QueryBuilder_1.default(semesterRegistration_model_1.SemesterRegistration.find().populate('academicSemester'), query).filter().sort().paginate().fields();
+    const meta = yield semesterRegistrationQuery.countTotal();
     const result = yield semesterRegistrationQuery.modelQuery;
-    return result;
+    return {
+        meta,
+        result
+    };
 });
 const getSingleSemesterRegistrationFormDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield semesterRegistration_model_1.SemesterRegistration.findById(id).populate('academicSemester');

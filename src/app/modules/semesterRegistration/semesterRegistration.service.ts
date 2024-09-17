@@ -37,7 +37,7 @@ const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) 
         throw new AppError(StatusCodes.CONFLICT, "This semester already exists!!")
     };
 
-    const result = await SemesterRegistration.create(payload);
+    const result = (await SemesterRegistration.create(payload)).populate("academicSemester");
     return result;
 };
 

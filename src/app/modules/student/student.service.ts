@@ -70,7 +70,9 @@ const searchStudentDB = async (query: Record<string, unknown>) => {
 
 // Find One Student By (custom made ID) ID form MongoDB
 const getSingleStudentFromDB = async (id: string) => {
-  const result = await StudentModel.findOne({ id: id });
+  const result = await StudentModel.findOne({ id: id }).populate('user')
+    .populate('admissionSemester')
+    .populate('academicDepartment academicFaculty');
   return result;
 };
 

@@ -44,7 +44,7 @@ const createSemesterRegistrationIntoDB = (payload) => __awaiter(void 0, void 0, 
         throw new appError_1.default(http_status_codes_1.StatusCodes.CONFLICT, "This semester already exists!!");
     }
     ;
-    const result = yield semesterRegistration_model_1.SemesterRegistration.create(payload);
+    const result = (yield semesterRegistration_model_1.SemesterRegistration.create(payload)).populate("academicSemester");
     return result;
 });
 const getAllSemesterRegistrationFormDB = (query) => __awaiter(void 0, void 0, void 0, function* () {

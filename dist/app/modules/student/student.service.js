@@ -82,7 +82,9 @@ const searchStudentDB = (query) => __awaiter(void 0, void 0, void 0, function* (
 });
 // Find One Student By (custom made ID) ID form MongoDB
 const getSingleStudentFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield student_model_1.StudentModel.findOne({ id: id });
+    const result = yield student_model_1.StudentModel.findOne({ id: id }).populate('user')
+        .populate('admissionSemester')
+        .populate('academicDepartment academicFaculty');
     return result;
 });
 // Delete Student By (custom made ID) ID form MongoDB

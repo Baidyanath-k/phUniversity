@@ -15,9 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.facultyServices = void 0;
 const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const faculty_model_1 = require("./faculty.model");
-const getAllFacultyIntoDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield faculty_model_1.Faculty.find();
-    return result;
+const getAllFacultyIntoDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const searchTerm = ['email', 'name.firstName', 'presentAddress'];
+    const facultyQuery = new QueryBuilder_1.default(faculty_model_1.Faculty.find().populate("academicDepartment"), query)
+        .search(searchTerm)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+    const meta = yield facultyQuery.countTotal();
+    const result = yield facultyQuery.modelQuery;
+    return { meta, result };
 });
 const getSingleFacultyInDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield faculty_model_1.Faculty.findOne({ id })

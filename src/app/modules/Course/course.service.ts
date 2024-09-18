@@ -21,8 +21,10 @@ const findAllCoursesFormDB = async (query: Record<string, unknown>) => {
         .sort()
         .paginate()
         .fields();
+
+    const meta = await courseQuery.countTotal();
     const result = await courseQuery.modelQuery;
-    return result;
+    return { meta, result };
 };
 
 const findSingleCourseFormDB = async (id: string) => {

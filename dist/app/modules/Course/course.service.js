@@ -41,8 +41,9 @@ const findAllCoursesFormDB = (query) => __awaiter(void 0, void 0, void 0, functi
         .sort()
         .paginate()
         .fields();
+    const meta = yield courseQuery.countTotal();
     const result = yield courseQuery.modelQuery;
-    return result;
+    return { meta, result };
 });
 const findSingleCourseFormDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield course_model_1.Course.findById(id);

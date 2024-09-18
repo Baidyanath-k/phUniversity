@@ -9,35 +9,29 @@ import { SemesterRegistration } from "./semesterRegistration.model";
 const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) => {
 
     const academicSemester = payload?.academicSemester;
+    const newStatus = payload?.status;
 
     // check: already "UPCOMING"/"ONGOING" register semester
-    const isUpcomingOrOngoing = await SemesterRegistration.findOne({
-        $or: [
-            { status: RegistrationStatus.ONGOING },
-            { status: RegistrationStatus.UPCOMING },
-        ]
-    });
-    if (isUpcomingOrOngoing?.status === 'UPCOMING' || isUpcomingOrOngoing?.status === "ONGOING") {
-        throw new AppError(StatusCodes.BAD_REQUEST, `There is already an ${isUpcomingOrOngoing?.status} register semester!`);
-    };
+    // Fetch any existing "ONGOING" or "UPCOMING" semesters
+    const existingOngoingSemester = await SemesterRegistration.findOne({ status: RegistrationStatus.ONGOING });
+    const existingUpcomingSemester = await SemesterRegistration.findOne({ status: RegistrationStatus.UPCOMING });
 
-
-
-    // const isUpcoming = await SemesterRegistration.findOne({
-    //     status: RegistrationStatus.UPCOMING,
-    // });
-
-    // if (isUpcoming) {
-    //     throw new AppError(StatusCodes.BAD_REQUEST, `There is already an UPCOMING semester registration!`);
-    // }
-
-    // const isOngoing = await SemesterRegistration.findOne({
-    //     status: RegistrationStatus.ONGOING,
-    // });
-
-    // if (isOngoing) {
-    //     throw new AppError(StatusCodes.BAD_REQUEST, `There is already an ONGOING semester registration!`);
-    // }
+    // Logic to handle creation of "ONGOING" or "UPCOMING" semesters based on the existing ones
+    if (newStatus === RegistrationStatus.ONGOING) {
+        // If there is already an "ONGOING" semester, don't allow another "ONGOING" semester
+        if (existingOngoingSemester) {
+            throw new AppError(StatusCodes.BAD_REQUEST, "There is already an ONGOING register semester!");
+        }
+        // If there is no "UPCOMING" semester, don't allow an "ONGOING" semester
+        if (!existingUpcomingSemester) {
+            throw new AppError(StatusCodes.BAD_REQUEST, "You cannot register an ONGOING semester without an UPCOMING semester!");
+        }
+    } else if (newStatus === RegistrationStatus.UPCOMING) {
+        // If there is already an "UPCOMING" semester, don't allow another "UPCOMING" semester
+        if (existingUpcomingSemester) {
+            throw new AppError(StatusCodes.BAD_REQUEST, "There is already an UPCOMING register semester!");
+        }
+    }
 
     // validation Academic semester
     const isAcademicSemesterExists = await AcademicSemester.findById(academicSemester);
@@ -59,6 +53,8 @@ const createSemesterRegistrationIntoDB = async (payload: TSemesterRegistration) 
     return result;
 };
 
+
+// Find all semester
 const getAllSemesterRegistrationFormDB = async (query: Record<string, unknown>) => {
     const semesterRegistrationQuery = new QueryBuilder(SemesterRegistration.find().populate('academicSemester'), query).filter().sort().paginate().fields();
 
